@@ -26,3 +26,7 @@ class SwooleClient
         $this->client->send( $msg );
     }
 }
+
+
+$client = new SwooleClient();
+$client->connect();

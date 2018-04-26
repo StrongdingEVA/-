@@ -44,3 +44,5 @@ class  SwooleServer
         echo "Client {$fd} close connection\n";
     }
 }
+
+$server = new SwooleServer();
