@@ -27,8 +27,8 @@
             "App\\": "app/"
         },
         "files":[
-            "app/SwooleServer.php",
-            "app/SwooleClient.php"
+            "app/helper/SwooleServer.php",
+            "app/helper/SwooleClient.php"
         ]
     },
     "autoload-dev": {
