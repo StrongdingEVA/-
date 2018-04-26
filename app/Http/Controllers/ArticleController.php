@@ -546,11 +546,11 @@ class ArticleController extends Controller
 
 
     public function test_server(){
-        $server = new SwooleServer();
+        $server = new \helper\SwooleServer();
     }
 
     public function test_client(){
-        $client = new SwooleClient();
+        $client = new \helper\SwooleClient();
         $client->connect();
     }
 }
