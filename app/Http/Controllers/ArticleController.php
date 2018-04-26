@@ -311,7 +311,7 @@ class ArticleController extends Controller
         $article->article_source_pic = str_replace("thumb","source",$articleInfo["article_thumb"]);
         $article->article_video = $articleInfo["article_video"];
         $article->user_id = $articleInfo["user_id"];
-        $article->is_show = isset($articleInfo["is_show"]) ? 1 : 0;
+        $article->is_recommend = isset($articleInfo["is_show"]) ? 1 : 0;
 
         DB::beginTransaction();
         $res_1 = $article->save($articleInfo);
