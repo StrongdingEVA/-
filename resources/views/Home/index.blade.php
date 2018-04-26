@@ -26,9 +26,7 @@
 			font-size: 14px;
 		}
 	</style>
-	<!--['if IE']>
-    <script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
-    <!['endif']-->
+
 	<div class="">
 		<div class="fixed-btn">
 			<a class="go-top" href="/picturewall/new">最新</a>
@@ -37,13 +35,17 @@
 		</div>
 	</div>
 	<section id="gallery-wrapper">
-		@foreach($scrollArticle as $val)
+		@foreach($articleList as $val)
 			<article class="white-panel">
-				<a class="example-image-link" href="/article_detail/{{$val->id}}" data-lightbox="example-set" data-title="{{$val->article_disc}}">
-					<img style="width: 100%" class="example-image" src="@if($val->article_thumb) {{$val->article_thumb}} @else /Home/images/logo.jpg @endif" alt=""/>
+				<a class="example-image-link" href="/article_detail/{{$val['id']}}" data-lightbox="example-set" data-title="{{$val['article_disc']}}">
+					<img style="width: 100%" class="example-image" src="@if($val['article_thumb']) {{$val['article_thumb']}} @else /Home/images/logo.jpg @endif" alt=""/>
 				</a>
-				<p>{{$val->article_title}}</p>
-				<p>时间：{{$val->created_at}}</p>
+				<p>
+                    <img src="{{$val['get_username']['logo']}}" style="height:25px" alt="">
+                    <span>{{$val['get_username']['username']}}</span>
+                </p>
+				<p>{{$val['article_title']}}</p>
+				<p>时间：{{$val['created_at']}}</p>
 			</article>
 		@endforeach
 	</section>
@@ -64,120 +66,12 @@
 	<script type="text/javascript" src="/Home/js/scroll.js"></script>
 	<script type="text/javascript">
         $(function(){
-            $(window).selectbox({
-                "bottom_height":10,
-                "page":1,
-                "pageCount":1,
-                "type":"1",
-                "callback":function(e){
-                    $.phpajax("/picturewall_ajax/"+ e.page +"/1","get","",true,"json",function(data){
-                        var data = eval("("+ data +")");
-                        if(data.status == 1){
-                            var ext = data.ext;
-                            e.status = 0;
-                            var str = "";
-                            $.map(ext,function(i){
-                                str += '<article class="white-panel" data="'+ i.id +'">';
-                                str += '<a class="example-image-link" href="';
-                                if(i.path){
-                                    str += i.path;
-                                }else{
-                                    str += i.thumb
-                                }
-                                str += '" data-lightbox="example-set" data-title="' + i.disc + '">';
-                                str += '<img style="width: 220px" class="example-image" src="';
-                                if(i.thumb){
-                                    str += i.thumb
-                                }else{
-                                    str += i.path
-                                }
-                                str += '" alt=""/>';
-                                str += '</a>';
-                                str += '<p>';
-                                str += '<img src="'+i.get_user.logo+'" width="40px" alt="">';
-                                str += '<span>'+i.get_user.username+'</span>';
-                                str += '<a class="span_link" style="position: absolute;right: 2px;line-height: 40px" href="javascript:void(0)">';
-                                str += '<span class="glyphicon-thumbs-up glyphicon';
-                                if(i.liked)
-                                    str += ' is-liked" type="1" ';
-                                else
-                                    str += '" type="0" ';
-                                str += 'data="'+i.id+'">'+i.like+'</span>';
-                                str += '</a>';
-                                str += '</p>';
-                                str += '<p>'+i.disc+'</p>';
-                                str += '<p>拍摄地点：';
-                                if(i.isshowparm) {
-                                    str += i.addr;
-                                }else {
-                                    str += '未开启定位';
-                                }
-                                str += '</p>';
-                                str += '<p>发布时间：'+i.created_at+'</p>';
-                                str += '</article>';
-                            });
-                            $("#gallery-wrapper").append(str);
-
-                            $(".glyphicon").bind("click",function(){
-                                picId = $(this).attr("data");
-                                type = $(this).attr("type");
-                                el = $(this);
-                                urlStr = "/dolike/"+picId + "/" + type;
-                                $.phpajax(urlStr,"get","",true,"json",function(data){
-                                    data = eval("("+ data +")");
-                                    if(data.status == -1){
-                                        alert(data.message);return;
-                                    }else if(data.status == -2){
-                                        window.location.href = "/auth/login";
-                                    }else{
-                                        if(type == 1){
-                                            $(el).attr("type",0);
-                                            $(el).removeClass("is-liked")
-                                        }else{
-                                            $(el).attr("type",1);
-                                            $(el).addClass("is-liked")
-                                        }
-                                        $(el).text(data.message);
-                                    }
-                                });
-                            })
-                        }else{
-                            alert(data.message);
-                        }
-                    })
-                }
-            });
-
             $("#gallery-wrapper").pinterest_grid({
                 no_columns: 6,
                 padding_x: 10,
                 padding_y: 10,
                 margin_bottom: 50,
             });
-
-            $(".glyphicon").click(function(){
-                picId = $(this).attr("data");
-                type = $(this).attr("type");
-                el = $(this);
-                urlStr = "/dolike/"+picId + "/" + type;
-                $.phpajax(urlStr,"get","",true,"json",function(data){
-                    data = eval("("+ data +")");
-                    if(data.status == -1){
-                        alert(data.message);return;
-                    }else if(data.status == -2){
-                        window.location.href = "/auth/login";
-                    }else{
-                        if(type == 1){
-                            $(el).attr("type",0);
-                            $(el).removeClass("is-liked")
-                        }else{
-                            $(el).attr("type",1);
-                            $(el).addClass("is-liked")
-                        }
-                        $(el).text(data.message);
-                    }
-                });
-            })
         });
 	</script>
 @endsection

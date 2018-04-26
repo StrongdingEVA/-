@@ -119,60 +119,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <ul class="nav navbar-nav">
                             <li @if($actionLi == 0) class="active" @endif><a href="/">综合</a></li>
                             @foreach($cateInfo as $val)
-                                <li><a href="/categoryarticle/{{$val->id}}" @if($actionLi == $val->id) class="active" @endif>{{$val->category_name}}</a></li>
+                                <li><a href="/categoryarticle/{{$val['id']}}" @if($actionLi == $val['id']) class="active" @endif>{{$val['category_name']}}</a></li>
                             @endforeach
-                            {{--<li class="active"><a href="index.html">Home</a></li>--}}
-                            {{--<li><a href="sports.html">Sports</a></li>--}}
-                            {{--<li class="dropdown">--}}
-                                {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Entertainment<b class="caret"></b></a>--}}
-                                {{--<ul class="dropdown-menu">--}}
-                                    {{--<li><a href="entertainment.html">Movies</a></li>--}}
-                                    {{--<li class="divider"></li>--}}
-                                    {{--<li><a href="entertainment.html">Another action</a></li>--}}
-                                    {{--<li class="divider"></li>--}}
-                                    {{--<li><a href="entertainment.html">Articles</a></li>--}}
-                                    {{--<li class="divider"></li>--}}
-                                    {{--<li><a href="entertainment.html">celebrity</a></li>--}}
-                                    {{--<li class="divider"></li>--}}
-                                    {{--<li><a href="entertainment.html">One more separated link</a></li>--}}
-                                {{--</ul>--}}
-                            {{--</li>--}}
-                            {{--<li><a href="shortcodes.html">Health</a></li>--}}
-                            {{--<li><a href="fashion.html">Fashion</a></li>--}}
-                            {{--<li class="dropdown">--}}
-                                {{--<a href="business.html" class="dropdown-toggle" data-toggle="dropdown">Business<b class="caret"></b></a>--}}
-                                {{--<ul class="dropdown-menu multi-column columns-2">--}}
-                                    {{--<div class="row">--}}
-                                        {{--<div class="col-sm-6">--}}
-                                            {{--<ul class="multi-column-dropdown">--}}
-                                                {{--<li><a href="business.html">Action</a></li>--}}
-                                                {{--<li class="divider"></li>--}}
-                                                {{--<li><a href="business.html">bulls</a></li>--}}
-                                                {{--<li class="divider"></li>--}}
-                                                {{--<li><a href="business.html">markets</a></li>--}}
-                                                {{--<li class="divider"></li>--}}
-                                                {{--<li><a href="business.html">Reviews</a></li>--}}
-                                                {{--<li class="divider"></li>--}}
-                                                {{--<li><a href="shortcodes.html">Short codes</a></li>--}}
-                                            {{--</ul>--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-sm-6">--}}
-                                            {{--<ul class="multi-column-dropdown">--}}
-                                                {{--<li><a href="business.html">features</a></li>--}}
-                                                {{--<li class="divider"></li>--}}
-                                                {{--<li><a href="entertainment.html">Movies</a></li>--}}
-                                                {{--<li class="divider"></li>--}}
-                                                {{--<li><a href="sports.html">sports</a></li>--}}
-                                                {{--<li class="divider"></li>--}}
-                                                {{--<li><a href="business.html">Reviews</a></li>--}}
-                                                {{--<li class="divider"></li>--}}
-                                                {{--<li><a href="business.html">Stock</a></li>--}}
-                                            {{--</ul>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</ul>--}}
-                            {{--</li>--}}
-                            {{--<li><a href="technology.html">Technology</a></li>--}}
                             <li @if($actionLi == 5) class="active" @endif><a href="/picturewall/old">热图</a></li>
                             <div class="clearfix"></div>
                         </ul>

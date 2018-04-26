@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class Article extends Model
 {
@@ -42,5 +44,43 @@ class Article extends Model
      */
     public static function getArticleToUser($userId = ""){
         return $userId ? Article::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5) : Article::where(["user_id"=>Auth::user()->id,"is_show"=>1])->orderBy("id","desc")->paginate(5);
+    }
+
+    /**
+     * 首页滚动加载 分页
+     * @param array $fields
+     * @param array $where
+     * @param array $order
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     */
+    public static function getList($fields = array(),$where = array(),$order = array(),$page = 1,$pageSize = 10){
+        $res = self::select('id')->where($where)->get()->toArray();
+        if(!$res){
+            return array();
+        }
+        $item = array_slice($res, ($page - 1) * $pageSize, $pageSize); //注释1
+        $temp = array();
+        foreach($item as $val){
+            $temp[] = $val['id'];
+        }
+        $result = self::select($fields)
+            ->where($where)
+            ->whereIn('articles.id',$temp)
+            ->orderBy($order[0],$order[1])
+            ->with("getUsername")
+            ->paginate($pageSize)
+            ->toArray();
+
+        $total = count($res);
+        $currentPage = "";
+        $paginatorAns = new LengthAwarePaginator($result, $total, $pageSize, $currentPage, [
+            'path' => Paginator::resolveCurrentPath(),  //注释2
+            'pageName' => 'page',
+        ]);
+        $paginatorAns->setCurrPage($page);
+        $result = $paginatorAns->toArray()['data'];
+        return $result;
     }
 }

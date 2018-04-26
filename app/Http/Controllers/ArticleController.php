@@ -30,7 +30,12 @@ use Illuminate\Support\Facades\Validator;
 class ArticleController extends Controller
 {
     public $arrOut = array("status" => -1,"message" => "参数错误");
+    public $userInfo = '';
 
+    public function __construct(){
+        //首页
+        $this->userInfo = Auth::user();
+    }
 
     /**
      * Display a listing of the resource.
@@ -39,20 +44,21 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //首页
         $userInfo = Auth::user();
         //查询分类
-        $cateInfo = Category::where("level",0)->orderBy("id","asc")->get();
-        //获取分类文章
-        foreach($cateInfo as $k => $v){
-            $cateInfo[$k]["article"] = self::getDaily($v["id"]);
-        }
-
+        $cateInfo = Category::where("level",0)->orderBy("id","asc")->get()->toArray();
+//        //获取分类文章
+//        foreach($cateInfo as $k => $v){
+//            $cateInfo[$k]["article"] = self::getDaily($v["id"]);
+//        }
         //$this->dispatch((new CollectionBook(17))->delay(2));
-
-        $scrollArticle = $this->getSrollArticle();
+        $fields = array('articles.*');
+        $where = array('articles.is_recommend' => 1);
+        $order = array('articles.views','desc');
+        $data = Article::getList($fields,$where,$order,1,16);
+        $articleList = $data['data'];
         $actionLi = 0;
-        return view('Home.index',compact("userInfo","cateInfo","scrollArticle","actionLi"));
+        return view('Home.index',compact("userInfo","cateInfo",'actionLi','articleList'));
     }
 
     /**
@@ -375,7 +381,7 @@ class ArticleController extends Controller
      */
     public function getSrollArticle(){
         $result = Article::join("users","users.id","=","articles.user_id")
-            ->select("articles.*","users.username")->where("articles.is_recommend",1)->get();
+            ->select("articles.*","users.username")->where("articles.is_recommend",1)->get()->toArray();
 
         if(!count($result)){
             $result = Article::join("users","users.id","=","articles.user_id")
@@ -392,7 +398,7 @@ class ArticleController extends Controller
      * @type 类别ID
      */
     public static function getDaily($type){
-        $articleInfo = Article::where(["article_status"=>"0","category"=>$type])->where("created_at",">=","DATE_ADD(LEFT(NOW(),10),INTERVAL -3 DAY)")->get();
+        $articleInfo = Article::where(["article_status"=>"0","category"=>$type])->where("created_at",">=","DATE_ADD(LEFT(NOW(),10),INTERVAL -3 DAY)")->get()->toArray();
         $arrTemp = array();
         foreach($articleInfo as $k => $v){
             $collector = $v["collector"] ? json_decode($v["collector"]) : array();
@@ -401,7 +407,7 @@ class ArticleController extends Controller
         arsort($arrTemp);
         $arrArticleTemp = array();
         foreach($arrTemp as $key => $val){
-            $articleInfo = Article::where("id",$key)->with("getUsername")->first();
+            $articleInfo = Article::where("id",$key)->with("getUsername")->first()->toArray();
             self::encrytById($articleInfo,"id");
             $arrArticleTemp[] = $articleInfo;
         }
