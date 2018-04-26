@@ -5,7 +5,7 @@
  * Date: 2018/4/26 0026
  * Time: 14:52
  */
-namespace helper;
+
 class  SwooleServer
 {
     private $serv;

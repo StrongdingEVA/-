@@ -5,7 +5,7 @@
  * Date: 2018/4/26 0026
  * Time: 14:53
  */
-namespace helper;
+
 class SwooleClient
 {
     private $client;
