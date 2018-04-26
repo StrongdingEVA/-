@@ -30,12 +30,6 @@ use Illuminate\Support\Facades\Validator;
 class ArticleController extends Controller
 {
     public $arrOut = array("status" => -1,"message" => "参数错误");
-    public $userInfo = '';
-
-    public function __construct(){
-        //首页
-        $this->userInfo = Auth::user();
-    }
 
     /**
      * Display a listing of the resource.
