@@ -74,6 +74,8 @@ Route::get('getansajax/{id}/{page}', 'AnswerController@getAnswerAjax');//获取�
 Route::get('linshi/', 'ArticleController@linshi');//获取评论的回复Ajax
 
 Route::get('test', 'ArticleController@test');
+Route::get('test_server', 'ArticleController@test_server');
+Route::get('test_client', 'ArticleController@test_client');
 
 
 

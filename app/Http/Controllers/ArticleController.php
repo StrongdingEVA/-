@@ -12,6 +12,8 @@ use App\Pic;
 use App\User;
 use App\Userextend;
 use App\UserMessage;
+use helper\SwooleClient;
+use helper\SwooleServer;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 
@@ -540,5 +542,15 @@ class ArticleController extends Controller
 
     public function linshi(){
     	return view("Home.linshi");
+    }
+
+
+    public function test_server(){
+        $server = new SwooleServer();
+    }
+
+    public function test_client(){
+        $client = new SwooleClient();
+        $client->connect();
     }
 }
