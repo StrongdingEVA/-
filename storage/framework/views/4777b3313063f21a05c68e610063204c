@@ -1,0 +1,75 @@
+<?php $__env->startSection('content'); ?>
+    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" >企业网站模板</a></div>
+	<!-- content-section-starts-here -->
+	<div class="main-body">
+		<div class="wrap" style="width: 55%">
+			<div class="col-md-12 content-left">
+				<div class="slider">
+					<div class="callbacks_wrap">
+						<ul class="rslides" id="slider">
+							<?php foreach($scrollArticle as $val): ?>
+								<li>
+									<a href="/article_detail/<?php echo e($val->id); ?>" class="aclass">
+									<img src="<?php echo e($val->article_thumb); ?>" alt="">
+									<div class="caption">
+										<a href="/article_detail/<?php echo e($val->id); ?>"><?php echo e($val->article_disc); ?></a>
+									</div>
+									</a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+				</div>
+				<div class="articles">
+					<?php foreach($cateInfo as $item): ?>
+						<header>
+							<h3 class="title-head"><?php echo e($item->category_name); ?></h3>
+						</header>
+						<?php foreach($item->article as $arItem): ?>
+							<div class="article">
+								<div class="article-left">
+									<a href="/article_detail/<?php echo e($arItem->id); ?>"><img src="<?php echo e($arItem->article_thumb); ?>"></a>
+								</div>
+								<div class="article-right">
+									<div class="article-title">
+										<p><?php echo e($arItem->created_at); ?>
+
+											<a class="span_link" href="javascript:void(0)">
+												<span class="glyphicon glyphicon-comment"></span><?php echo e($arItem->comments); ?>
+
+											</a>
+											<a class="span_link" href="javascript:void(0)">
+												<span class="glyphicon glyphicon-eye-open"></span><?php echo e($arItem->views); ?>
+
+											</a>
+											<a class="span_link" href="#">
+												<span class="glyphicon glyphicon-thumbs-up"></span><?php echo e($arItem->collections); ?>
+
+											</a>
+										</p>
+										<a class="title" href="/article_detail/<?php echo e($arItem->id); ?>"><?php echo e($arItem->article_title); ?></a>
+									</div>
+									<div class="article-text">
+										<p><?php echo e($arItem->article_disc); ?></p>
+										<a href="/article_detail/<?php echo e($arItem->id); ?>"><img src="/Home/images/more.png" alt="" /></a>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						<?php endforeach; ?>
+						<?php if(empty($item->article)): ?>
+							<div class="article">
+								<h3><a href="/articles">暂时没有该类文章，快去发表文章吧~！</a></h3>
+							</div>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</div>
+				</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!-- content-section-ends-here -->
+	<!-- footer-section-starts-here -->
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('Home.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

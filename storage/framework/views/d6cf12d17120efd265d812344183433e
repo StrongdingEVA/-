@@ -1,0 +1,108 @@
+<?php $__env->startSection('content'); ?>
+    <style>
+        .mar-top{ margin-top: 20px;}
+        .span-color{color: #f00;}
+    </style>
+    <script src="/uplodify/jquery.uploadify.js" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <link rel="stylesheet" type="text/css" href="/uplodify/uploadify.css">
+    <div class="main-body">
+        <div class="wrap">
+            <form action="/createarticle" method="post" enctype="multipart/form-data">
+            <!--short-codes-starts-->
+            <div class="short-codes" style="width: 50%;margin: 0px auto">
+                <?php if(count($errors) > 0): ?>
+                    <h2 class="tm-section-title">错误信息：</h2>
+                    <div class="alert alert-danger">
+                        <?php foreach($errors->all() as $error): ?>
+                            <p style="color: #ff0000"><?php echo e($error); ?></p>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+                <input type="hidden" type="text" name="_token" value="<?php echo e(csrf_token()); ?>">
+                <h2 class="heading text-center">添加文章</h2>
+
+                <div class="form-group mar-top">
+                    <input class="form-control input-lg onblur" data="title" type="text" name="article_title" <?php if( old('article_title') ): ?> value="<?php echo e(old('article_title')); ?>" <?php endif; ?> placeholder="文章标题" required>
+                </div>
+
+
+                <div class="form-group mar-top">
+                    <select class="form-control" name="category">
+                        <?php foreach($cateInfo as $val): ?>
+                            <option value="<?php echo e($val->id); ?>" <?php if($val->id == old("category")): ?> selected <?php endif; ?> value=""><?php echo e($val->category_name); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+
+                <div class="input-group mar-top" id="select-file-div">
+                    <input id="file_upload" name="file_upload" type="file" multiple="true">
+                    <input type="hidden" name="article_thumb" <?php if( old('article_thumb') ): ?> value="<?php echo e(old('article_thumb')); ?>" <?php endif; ?> id="article_thumb" required>
+                    <?php if( old('article_thumb') ): ?> <img src="<?php echo e(old('article_thumb')); ?>" alt=""> <?php endif; ?>
+                </div>
+
+                <script>
+                    $(function() {
+                        $('#file_upload').uploadify({
+                            'formData'     : {
+                                'timestamp' : '<?php echo time();?>',
+                                'token'     : '<?php echo md5('unique_salt' . time());?>'
+                            },
+                            'swf'      : '/uplodify/uploadify.swf',
+                            'uploader' : '/uploadimg',
+                            'buttonText' : '选择图片',
+                            'fileTypeDesc' : '*.jpg',
+                            'multi' : false,
+                            'removeCompleted':true,
+                            'onUploadSuccess' : function(file, data, response) {
+                                data = JSON.parse(data);
+                                if(data.status == -1){
+                                    alert(data.message);return;
+                                }
+                                articleThumb = document.getElementById("#articleThumb");
+                                if(articleThumb === null){
+                                    str = '<img id="thumb" src="'+ data.src +'" alt="图片加载失败"/>';
+                                    $("#select-file-div").append(str);
+                                }
+                                $("#article_thumb").val(data.src);
+                            },
+                        });
+                    });
+                </script>
+
+                <div class="grid_3 grid_5">
+                    <textarea name="article_disc" id="article_disc" placeholder="文章简介" class="form-control onblur" cols="30" rows="4" required><?php if(old("article_disc")): ?> <?php echo e(old("article_disc")); ?>} <?php endif; ?></textarea>
+                </div>
+                
+                <div class="grid_3 grid_5" id="editor"></div>
+                <script>
+                    $(function(){
+                        //实例化编辑器
+                        //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+                        var ue = UE.getEditor('editor');
+                    })
+                </script>
+
+                <div class="form-group">
+                    <div class="col-sm-10" style="padding-left: 0px">
+                        <div class="checkbox">
+                            <label>
+                                <input name="is_show" type="checkbox" <?php if( old('is_show') == "on" ): ?> checked <?php endif; ?>>让大家也看到
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group mar-top" style="width: 100%" id="select-file-div">
+                    <input type="submit" style="margin-left: 600px" class="btn btn-primary btn-sm" value="发布">
+                </div>
+            </div>
+            <!--short-codes-evds-->
+            </form>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make("Home.header", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
