@@ -529,11 +529,12 @@ class ArticleController extends Controller
     }
 
     public function test(Request $request){
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1',6379,30);
+//        $redis = new \Redis();
+//        $redis->connect('127.0.0.1',6379,30);
 //        $redis->auth('mrtin');
-        $result = $redis->get('name');
-        var_dump($result);
+//        $result = $redis->get('name');
+//        var_dump($result);
+        phpinfo();
     }
 
 
