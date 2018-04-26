@@ -36,7 +36,7 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {echo 12;exit;
+    {
         //首页
         $userInfo = Auth::user();
         //查询分类
