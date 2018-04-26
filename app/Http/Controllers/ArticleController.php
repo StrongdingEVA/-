@@ -50,7 +50,7 @@ class ArticleController extends Controller
         $where = array('articles.is_recommend' => 1);
         $order = array('articles.views','desc');
         $data = Article::getList($fields,$where,$order,1,16);
-        $articleList = $data['data'];
+        $articleList = $data ? $data['data'] : array();
         $actionLi = 0;
         return view('Home.index',compact("userInfo","cateInfo",'actionLi','articleList'));
     }
