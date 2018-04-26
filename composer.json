@@ -25,7 +25,11 @@
         ],
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+        "files":[
+            "app/SwooleServer.php",
+            "app/SwooleClient.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [
