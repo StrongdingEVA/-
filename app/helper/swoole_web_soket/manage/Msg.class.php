@@ -12,6 +12,9 @@ class Msg{
 
     public function run($server,$data){
         file_put_contents('111.txt',json_encode($server));
+        $fd = $data['recepter'];
+        $msg = $data['msg'];
+        $server->push($fd, $msg);return;
         $f = $data['f'];
         switch ($f){
             case 's_m_t_u':
