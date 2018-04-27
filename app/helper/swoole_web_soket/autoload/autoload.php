@@ -5,13 +5,11 @@
  * Date: 2018/4/27 0027
  * Time: 10:44
  */
-namespace autoload;
-use star;
-use server;
+
 class Autoload{
 
     private static $rootPath;
-    private static $appPath='app';
+    private static $appPath='manage';
     private static $configPath;
     private static $classPath = array();
 
@@ -29,7 +27,7 @@ class Autoload{
         $libs = array(
             self::$rootPath . DS . self::$appPath,
             self::$rootPath
-        );echo $baseClasspath;
+        );
         foreach ($libs as $lib) {
             $classpath = $lib . DS . $baseClasspath;
             if (\is_file($classpath)) {

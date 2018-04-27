@@ -5,9 +5,7 @@
  * Date: 2018/4/27 0027
  * Time: 10:43
  */
-use autoload\Autoload;
 use manage\Msg;
-
 error_reporting(E_ALL);
 $rootPath = __DIR__;
 require 'autoload/autoload.php';
@@ -68,10 +66,7 @@ class WebsocketTest {
                 $server->push($frame->fd, "操作类{$realyAct}不存在");
                 return;
             }
-
-
-//            require_once 'manage/Msg.class.php';
-//            $manage = new \manage\Msg();
+            
             $manage = new $realyAct();
             $manage->run($server,$param);
 //            if($data['act'] == 'send_file'){//调用task
@@ -97,9 +92,10 @@ class WebsocketTest {
 
     public function getRoute(){
         return array(
-            'send_t_u' => 'Msg',
+            'send_t_u' => '\manage\Msg',
         );
     }
 }
 
-new WebsocketTest();
+$obj = new WebsocketTest();
+$obj->test();
