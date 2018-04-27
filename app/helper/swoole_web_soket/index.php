@@ -36,3 +36,5 @@ class WebsocketTest {
         $this->server->start();
     }
 }
+
+new WebsocketTest();
