@@ -68,10 +68,11 @@ class WebsocketTest {
                 $server->push($frame->fd, "操作类{$realyAct}不存在");
                 return;
             }
-            require_once 'manage/Msg.class.php';
-            $manage = new \manage\Msg();
+            $this->sendTest($server);
+//            require_once 'manage/Msg.class.php';
+//            $manage = new \manage\Msg();
 //            $manage = new $realyAct();
-            $manage->run($this,$param);
+//            $manage->run($this,$param);
 //            if($data['act'] == 'send_file'){//调用task
 //                $server->task(array('fd' => $frame->fd,'data' => 'this is file'));
 //            }
@@ -91,6 +92,10 @@ class WebsocketTest {
 
 
         $this->server->start();
+    }
+
+    public function sendTest($server){
+        $server->push(1,'aaaaaaaaaaaaaaaaaa');
     }
 
     public function getRoute(){
