@@ -69,7 +69,7 @@ class WebsocketTest {
                 return;
             }
 
-            $manage = new $realyAct();
+            $manage = new $realyAct();printf($manage);
             $manage->run($server,$param);
 //            if($data['act'] == 'send_file'){//调用task
 //                $server->task(array('fd' => $frame->fd,'data' => 'this is file'));
