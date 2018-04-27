@@ -29,7 +29,7 @@ class Autoload{
         $libs = array(
             self::$rootPath . DS . self::$appPath,
             self::$rootPath
-        );
+        );echo $baseClasspath;
         foreach ($libs as $lib) {
             $classpath = $lib . DS . $baseClasspath;
             if (\is_file($classpath)) {
