@@ -68,6 +68,7 @@ class WebsocketTest {
                 $server->push($frame->fd, "操作类{$realyAct}不存在");
                 return;
             }
+            print_r($param);
 //            $this->sendTest($server);
             require_once 'manage/Msg.class.php';
             $manage = new \manage\Msg();
