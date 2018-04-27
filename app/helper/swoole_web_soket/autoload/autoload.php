@@ -61,8 +61,5 @@ class Autoload{
         }
         \spl_autoload_register(__CLASS__ . '::autoLoader');
         \set_exception_handler(__CLASS__ . '::exceptionHandler');
-
-        $star = new \star\Star();
-        $star::run();
     }
 }
