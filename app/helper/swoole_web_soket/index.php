@@ -77,10 +77,10 @@ class WebsocketTest {
         $this->server->on('open', function (swoole_websocket_server $server, $request) {;
             $str = 'abcdefghijklmnopqrstuvwxyz';
             $userInfo = array(
-                'id' => $request['fd'],
+                'id' => $request->fd,
                 'name' => substr($str,rand(0,10),5)
             );
-            $this->connecter[$request['fd']] = $userInfo;
+            $this->connecter[$request->fd] = $userInfo;
             $temp = array('info' => '当前链接人数','data' => count($this->connecter));
             $server->push($request->fd,json_encode($temp));
             echo "server: handshake success with fd{$request->fd}\n";
