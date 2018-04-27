@@ -11,6 +11,7 @@ class Msg{
     }
 
     public function run($server,$data){
+        file_put_contents('111.txt',json_encode($data));
         $f = $data['f'];
         switch ($f){
             case 's_m_t_u':
