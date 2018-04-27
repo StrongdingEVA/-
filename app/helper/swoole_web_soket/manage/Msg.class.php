@@ -25,6 +25,6 @@ class Msg{
     public function sendMsgToUsers($server,$data){
         $fd = $data['recepter'];
         $msg = $data['msg'];
-        $server->push($fd, $msg);
+        $server->push(1, $msg);
     }
 }
