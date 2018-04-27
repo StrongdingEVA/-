@@ -62,11 +62,11 @@ class WebsocketTest {
             }
             $realyAct = $route[$act];
             $path = 'manage/' . $realyAct . '.class.php';
-            if(!is_file($path)){
-                $server->push($frame->fd, "操作类{$realyAct}不存在");
-                return;
-            }
-            
+//            if(!is_file($path)){
+//                $server->push($frame->fd, "操作类{$realyAct}不存在");
+//                return;
+//            }
+
             $manage = new $realyAct();
             $manage->run($server,$param);
 //            if($data['act'] == 'send_file'){//调用task
