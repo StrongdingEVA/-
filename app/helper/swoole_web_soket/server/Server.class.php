@@ -13,7 +13,7 @@ class Server {
     public function __construct($options = array()) {
         $options['addr'] && $this->addr = $options['addr'];
         $options['port'] && $this->port = $options['port'];
-        $this->server = new swoole_websocket_server($this->addr, $this->port);
+        $this->server = new swoole_websocket_server('0.0.0.0', 11223);
         $this->server->on('open', function (swoole_websocket_server $server, $request) {
             echo "server: handshake success with fd{$request->fd}\n";
         });
