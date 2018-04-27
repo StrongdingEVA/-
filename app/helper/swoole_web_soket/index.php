@@ -46,8 +46,6 @@ class WebsocketTest {
                     $server->push($item['id'], "欢迎{$userInfo['name']}加入！");
                 }
             }
-            $manage = new Msg();
-            printf($manage);
             echo "server: handshake success with fd{$request->fd}\n";
         });
 
@@ -70,9 +68,10 @@ class WebsocketTest {
                 $server->push($frame->fd, "操作类{$realyAct}不存在");
                 return;
             }
+            require_once 'manage/Msg.class.php';
             $manage = new \manage\Msg();
 //            $manage = new $realyAct();
-            printf($manage);echo 11111;return;
+            printf($manage);
             $manage->run($server,$param);
 //            if($data['act'] == 'send_file'){//调用task
 //                $server->task(array('fd' => $frame->fd,'data' => 'this is file'));
