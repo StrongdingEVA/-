@@ -179,12 +179,22 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script>
     //连接socket服务器
     var ws = new WebSocket("ws://118.31.20.94:11223");
+    var data = {
+        act:'send_msg',
+        data:'this is msg'
+    };
 
     ws.onopen = function()
     {
         // Web Socket 已连接上，使用 send() 方法发送数据
-        ws.send("发送数据");
+        ws.send(data.stringify);
         alert("数据发送中...");
+
+        setTimeout(function(){
+            data.act = 'send_file';
+            data.data = 'this is file';
+            wx.send(data.stringify)
+        },3000)
     };
 
     ws.onmessage = function (evt)
