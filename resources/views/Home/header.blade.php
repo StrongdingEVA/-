@@ -181,16 +181,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     //连接socket服务器
     var socket = io('http://118.31.20.94:11223');
     socket.on('connection', function (data) {
-        console.log(data);
+        console.log(222222,data);
     });
     console.log(socket);
     socket.on('1:App\\Events\\SomeEvent', function(data){
-        console.log(data);return;
-        var str = data.messageData;
-        $(".js-marquee").find('.marquee2').remove();
-        var htmlStr = '<div class="marquee2"><a class="breaking" href="single.html">>>'+ str +'</a></div>';
-        $(".js-marquee").prepend(htmlStr);
-        //这里可以根据收到的消息，做一些改变页面结构的工作……
+        console.log(111111,data);return;
     });
 </script>
 </html>
