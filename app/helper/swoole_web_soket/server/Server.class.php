@@ -13,8 +13,9 @@ class Server {
     public function __construct($options = array()) {
         $options['addr'] && $this->addr = $options['addr'];
         $options['port'] && $this->port = $options['port'];
-        echo $this->addr;
-        echo $this->port;exit;
+    }
+
+    public function run(){
         $this->server = new swoole_websocket_server($this->addr, $this->port);
         $this->server->on('open', function (swoole_websocket_server $server, $request) {
             echo "server: handshake success with fd{$request->fd}\n";
@@ -33,12 +34,7 @@ class Server {
                 $this->server->push($fd, $request->get['message']);
             }
         });
-    }
-
-    public function run(){
-        if(!$this->server){
-            throw new \Exception("no this server");
-        }
+        
         $this->server->start();
     }
 }
