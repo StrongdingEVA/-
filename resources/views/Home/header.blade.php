@@ -21,7 +21,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     {{--<link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>--}}
     <script type="text/javascript" src="/Home/js/responsiveslides.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="/Home/js/myjs.js"></script>
-    <script type="text/javascript" charset="utf-8" src="/Home/js/socket.io.js"></script>
     <script>
 
     </script>
