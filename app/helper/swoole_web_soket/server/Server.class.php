@@ -15,9 +15,14 @@ class Server {
         $options['port'] && $this->port = $options['port'];
     }
 
-    public function run(){echo 1111;
+    public function run(){
+        var_dump(extension_loaded('swoole'));
+        echo "\n";
+        var_dump(function_exists('swoole_websocket_server'));
+        echo "\n";
+        var_dump(get_extension_funcs('swoole'));
+        echo "\n";exit;
         $this->server = new swoole_websocket_server($this->addr, $this->port);
-        var_dump($this->server);exit;
         $this->server->on('open', function (swoole_websocket_server $server, $request) {
             echo "server: handshake success with fd{$request->fd}\n";
         });
