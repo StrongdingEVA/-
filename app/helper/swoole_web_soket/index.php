@@ -37,13 +37,14 @@ class WebsocketTest {
 //        });
 
         $this->server->on('open', function (swoole_websocket_server $server, $request) {;
-            $temp = array('info' => '当前链接人数','data' => $this->server->connections);
+            $temp = array('info' => '当前链接人数','data' => count($this->server->connections));
             $server->push($request->fd,json_encode($temp));
             echo "server: handshake success with fd{$request->fd}\n";
+            echo "server connections:" . printf($this->server->connections);
         });
         $this->server->on('message', function (swoole_websocket_server $server, $frame) {
             $data = json_decode($frame->data,1);
-            echo "receive from 111 {$frame->fd}; act:{$data['act']}; data:{$data['data']},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+            echo "receive from {$frame->fd}; act:{$data['act']}; data:{$data['data']},opcode:{$frame->opcode},fin:{$frame->finish}\n";
             $server->push($frame->fd, "this is server");
         });
         $this->server->on('close', function ($ser, $fd) {
