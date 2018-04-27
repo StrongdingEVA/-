@@ -179,7 +179,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </body>
 <script>
     //连接socket服务器
-    var socket = io('http://118.31.20.94:11223');
+    var socket = io('ws://118.31.20.94:11223');
     socket.on('connection', function (data) {
         console.log(222222,data);
     });
