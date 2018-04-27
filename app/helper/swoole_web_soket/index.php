@@ -6,6 +6,7 @@
  * Time: 10:43
  */
 use autoload\Autoload;
+use manage\Msg;
 
 error_reporting(E_ALL);
 $rootPath = __DIR__;
@@ -52,13 +53,27 @@ class WebsocketTest {
         $this->server->on('message', function (swoole_websocket_server $server, $frame) {
             //规定客户端发送json字符串
             $data = json_decode($frame->data,1);  //接收客户端发来的消息
+            $act = $data['act'];
+            $param['data'] = $data['data'];
+            $param['fd'] = $frame->fd;
 
+            $route = $this->getRoute();
+            if(!isset($route[$act]) || empty($route[$act])){
+                $server->push($frame->fd, "操作规则不存在");
+                return;
+            }
+            $realyAct = $route[$act];
+            $path = 'manage/' . $realyAct . '.class.php';
+            if(!is_file($path)){
+                $server->push($frame->fd, "操作类{$realyAct}不存在");
+                return;
+            }
 
+            $manage = new $realyAct();
+            $manage->run($server,$param);
 //            if($data['act'] == 'send_file'){//调用task
 //                $server->task(array('fd' => $frame->fd,'data' => 'this is file'));
 //            }
-
-//            $server->push($frame->fd, "发送成功"); //在此处通知客户端消息发送成功
         });
 
         $this->server->on('close', function ($server, $fd) { // 客户端关闭
@@ -73,7 +88,14 @@ class WebsocketTest {
             }
         });
 
+
         $this->server->start();
+    }
+
+    public function getRoute(){
+        return array(
+            'send_t_u' => 'Msg',
+        );
     }
 }
 
