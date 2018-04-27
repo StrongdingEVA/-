@@ -71,7 +71,7 @@ class WebsocketTest {
             require_once 'manage/Msg.class.php';
             $manage = new \manage\Msg();
 //            $manage = new $realyAct();
-            printf($manage);
+            print_r($manage);
             $manage->run($server,$param);
 //            if($data['act'] == 'send_file'){//调用task
 //                $server->task(array('fd' => $frame->fd,'data' => 'this is file'));
