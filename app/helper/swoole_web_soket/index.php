@@ -22,12 +22,12 @@ class WebsocketTest {
 
         $this->server->on('task',function(swoole_websocket_server $server,$task_id,$from_id, $data){
             echo "This Task {$task_id} from Worker {$from_id}\n";
-            echo "Data: {$data}\n";
+            echo "Data: {$data['data']}\n";
             for($i = 0 ; $i < 10 ; $i ++ ) {
                 sleep(1);
                 echo "Task {$task_id} Handle {$i} times...\n";
             }
-            $fd = json_decode( $data , true )['fd'];
+            $fd = $data['fd'];
             $server->push( $fd , "Data in Task {$task_id}");
             return "Task {$task_id}'s result";
         });
@@ -96,9 +96,8 @@ class WebsocketTest {
             echo "receive from {$frame->fd}; act:{$data['act']}; data:{$data['data']},opcode:{$frame->opcode},fin:{$frame->finish}\n";
 
             if($data['act'] == 'send_file'){//调用task
-                $server->task($data['data']);
+                $server->task(array('fd' => $frame->fd,'data' => 'this is file'));
             }
-
 
             $server->push($frame->fd, "this is server");
         });
