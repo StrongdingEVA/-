@@ -74,9 +74,9 @@ class WebsocketTest {
             $str = 'abcdefghijklmnopqrstuvwxyz';
             $userInfo = array(
                 'id' => $request['fd'],
-                'name' => substr($str,rand(0,10),5)
+                'name' => 11111
             );
-            $this->connecter[$request['fd']] = $userInfo;
+//            $this->connecter[$request['fd']] = $userInfo;
             $response->status(101);
             $response->end();
             return true;
