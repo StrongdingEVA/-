@@ -42,8 +42,8 @@ class WebsocketTest {
             echo "server: handshake success with fd{$request->fd}\n";
         });
         $this->server->on('message', function (swoole_websocket_server $server, $frame) {
-            $data = json_decode($frame->data,1);echo var_dump($data);
-            echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+            $data = json_decode($frame->data,1);
+            echo "receive from {$frame->fd}; act:{$data['act']}; data:{$data['data']},opcode:{$frame->opcode},fin:{$frame->finish}\n";
             $server->push($frame->fd, "this is server");
         });
         $this->server->on('close', function ($ser, $fd) {
