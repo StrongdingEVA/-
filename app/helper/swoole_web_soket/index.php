@@ -81,8 +81,12 @@ class WebsocketTest {
                 'name' => substr($str,rand(0,10),5)
             );
             $this->connecter[$request->fd] = $userInfo;
-            $temp = array('info' => '当前链接人数','data' => count($this->connecter));
-            $server->push($request->fd,json_encode($temp));
+            $temp = array('info' => '当前链接人数','data' => $this->connecter);
+            $server->push($request->fd,json_encode($temp)); //告诉自己当前连接人数
+
+            foreach($this->connecter as $item){//通知其他人 有客人来了
+                $server->push($item['id'], "欢迎{$userInfo['name']}加入！");
+            }
             echo "server: handshake success with fd{$request->fd}\n";
         });
         $this->server->on('message', function (swoole_websocket_server $server, $frame) {
