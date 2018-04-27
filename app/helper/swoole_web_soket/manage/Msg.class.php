@@ -12,7 +12,6 @@ class Msg{
 
     public function run($server,$data){
         $f = $data['f'];
-        file_put_contents('1111.txt',$f);
         switch ($f){
             case 's_m_t_u':
                 $this->sendMsgToUsers($server,$data);
@@ -26,6 +25,6 @@ class Msg{
     public function sendMsgToUsers($server,$data){
         $fd = $data['recepter'];
         $msg = $data['msg'];
-        $server->push(1, $msg);
+        $server->push($fd, $msg);
     }
 }

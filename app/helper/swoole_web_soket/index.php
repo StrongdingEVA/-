@@ -54,7 +54,7 @@ class WebsocketTest {
             //规定客户端发送json字符串
             $data = json_decode($frame->data,1);  //接收客户端发来的消息
             $act = $data['act'];
-            $param['data'] = $data['data'];
+            $param = $data['data'];
             $param['fd'] = $frame->fd;
 
             $route = $this->getRoute();
