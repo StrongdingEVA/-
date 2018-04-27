@@ -37,10 +37,10 @@ class WebsocketTest {
 //        });
 
         $this->server->on('open', function (swoole_websocket_server $server, $request) {;
+            printf($server);
             $temp = array('info' => '当前链接人数','data' => count($server->connections));
             $server->push($request->fd,json_encode($temp));
             echo "server: handshake success with fd{$request->fd}\n";
-            echo "server connections:" . printf($server->connections) . "\n";
         });
         $this->server->on('message', function (swoole_websocket_server $server, $frame) {
             $data = json_decode($frame->data,1);
