@@ -38,10 +38,6 @@ class WebsocketTest {
 //        });
 
         $this->server->on('handshake', function (swoole_http_request $request, swoole_http_response $response) {
-            print_r($request);
-            echo "\n";
-            printf($response);
-            echo "\n";
 //            // websocket握手连接算法验证
 //            $secWebSocketKey = $request->header['sec-websocket-key'];
 //            $patten = '#^[+/0-9A-Za-z]{21}[AQgw]==$#';
@@ -75,13 +71,16 @@ class WebsocketTest {
 //
 //            $response->status(101);
 //            $response->end();
-            echo "connected!" . PHP_EOL;
-            return true;
+            $str = 'abcdefghijklmnopqrstuvwxyz';
+            $userInfo = array(
+                'id' => $request['fd'],
+                'name' => substr($str,rand(0,10),5)
+            );
+            $this->connecter[$request['fd']] = $userInfo;
         });
 
         $this->server->on('open', function (swoole_websocket_server $server, $request) {;
-            printf($server);
-            $temp = array('info' => '当前链接人数','data' => count($server->connections));
+            $temp = array('info' => '当前链接人数','data' => count($this->connecter));
             $server->push($request->fd,json_encode($temp));
             echo "server: handshake success with fd{$request->fd}\n";
         });
