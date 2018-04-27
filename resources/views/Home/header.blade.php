@@ -5,20 +5,17 @@
     <link href="/Home/css/bootstrap.css" rel='stylesheet' type='text/css' />
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript" src="/Home/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/Home/js/blog.js"></script>
     <!-- Custom Theme files -->
     <link href="/Home/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="/Home/css/my.css">
     <!-- Custom Theme files -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html; charset=utf-8" />
     <meta name="keywords" content="Express News Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
 Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
     <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-    <!-- for bootstrap working -->
     <script type="text/javascript" src="/Home/js/bootstrap.js"></script>
-    <!-- //for bootstrap working -->
-    <!-- web-fonts -->
-    {{--<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>--}}
-    {{--<link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>--}}
     <script type="text/javascript" src="/Home/js/responsiveslides.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="/Home/js/myjs.js"></script>
     <script>
@@ -35,13 +32,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             });
         });
     </script>
-    <style>
-        a{text-decoration: none}
-        a:hover{text-decoration: none}
-        .aclass{display: block;margin: 0px auto;}
-        .caption a{min-height: 20px;}
-        .page-class{width: 100%;margin-top: 100px}
-    </style>
 </head>
 <body>
 <!-- header-section-starts-here -->
@@ -52,7 +42,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <div class="top-menu">
                 <ul>
                     <li><a href="/">{{@\Illuminate\Support\Facades\Auth::user() ? @\Illuminate\Support\Facades\Auth::user()->username : '游客'}}&nbsp;&nbsp;<img src="{{@\Illuminate\Support\Facades\Auth::user() ? @\Illuminate\Support\Facades\Auth::user()->logo : '/upload/userimg/default.png'}}" height="28px" alt="{{@\Illuminate\Support\Facades\Auth::user() ? @\Illuminate\Support\Facades\Auth::user()->username : '游客'}}"></a></li>
-                    <li><a href="/articles">发布文章</a></li>
+                    <li><a href="/publish">发布文章</a></li>
                     <li><a href="contact.html">我的收藏</a></li>
                     <li><a href="about.html">关于我们</a></li>
                     <li>
@@ -70,27 +60,27 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             </div>
             <script>
                 $(function(){
-                    loadMessage();
-                    var t =setInterval(loadMessage,15000);
-                    function loadMessage(){
-                        $.phpajax("/getusermessage","get","",true,"json",function(data){
-                            data = eval("("+ data +")");
-                            if(data.status == -1){
-                                clearInterval(t);
-                                return;
-                            }
-                            if(data.ext.length){
-                                htmlStr = "";
-                                htmlStr += '<ul class="dropdown-menu">';
-                                for(var i = 0 in data.ext){
-                                    htmlStr += '<li><a href="/article_detail_2/'+ data.ext[i].etc +'/'+ data.ext[i].comval +'/'+ data.ext[i].comtype +'/' + data.ext[i].id + '">'+ data.ext[i].message_disc +'</a></li>';
-                                }
-                                htmlStr += '</ul>';
-                                $(".dropdown-menu").remove();
-                                $("#dropdown-toggle").html('我的消息<b class="caret"></b>').after(htmlStr);
-                            }
-                        });
-                    }
+//                    loadMessage();
+//                    var t =setInterval(loadMessage,15000);
+//                    function loadMessage(){
+//                        $.phpajax("/getusermessage","get","",true,"json",function(data){
+//                            data = eval("("+ data +")");
+//                            if(data.status == -1){
+//                                clearInterval(t);
+//                                return;
+//                            }
+//                            if(data.ext.length){
+//                                htmlStr = "";
+//                                htmlStr += '<ul class="dropdown-menu">';
+//                                for(var i = 0 in data.ext){
+//                                    htmlStr += '<li><a href="/article_detail_2/'+ data.ext[i].etc +'/'+ data.ext[i].comval +'/'+ data.ext[i].comtype +'/' + data.ext[i].id + '">'+ data.ext[i].message_disc +'</a></li>';
+//                                }
+//                                htmlStr += '</ul>';
+//                                $(".dropdown-menu").remove();
+//                                $("#dropdown-toggle").html('我的消息<b class="caret"></b>').after(htmlStr);
+//                            }
+//                        });
+//                    }
                 })
             </script>
             <div class="clearfix"></div>
@@ -105,7 +95,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <div class="wrap">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only">Toggle navigation</span>
+                            <span class="sr-only">导航</span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
@@ -116,11 +106,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li @if($actionLi == 0) class="active" @endif><a href="/">综合</a></li>
-                            @foreach($cateInfo as $val)
-                                <li><a href="/categoryarticle/{{$val['id']}}" @if($actionLi == $val['id']) class="active" @endif>{{$val['category_name']}}</a></li>
-                            @endforeach
-                            <li @if($actionLi == 5) class="active" @endif><a href="/picturewall/old">热图</a></li>
+                            <li class="active"><a href="/blog/world">世界</a></li>
+                            <li class="active"><a href="/blog/friend">好友</a></li>
+                            <li class="active"><a href="/blog/own">我的</a></li>
+                            <li class="active"><a href="/picturewall/old">热图</a></li>
                             <div class="clearfix"></div>
                         </ul>
                         <div class="search">
@@ -128,8 +117,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <div class="search-box">
                                 <div id="sb-search" class="sb-search">
                                     <form>
-                                        <input class="sb-search-input" placeholder="Enter your search term..." type="search" name="search" id="search">
-                                        <input class="sb-search-submit" type="submit" value="">
+                                        <input class="sb-search-input" placeholder="搜索用户/文章" value="{{$search}}" type="search" name="search" id="search">
+                                        <input class="sb-search-submit" type="button" onclick="javascript:void(window.location.href='/blog/{{$key}}}/'+$('#search').val())" value="">
                                         <span class="sb-icon-search"> </span>
                                     </form>
                                 </div>
@@ -167,46 +156,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         <script type="text/javascript" src="/Home/js/jquery.marquee.min.js"></script>
         <script>
             $('.marquee').marquee({ pauseOnHover: true });
-            //@ sourceURL=pen.js
         </script>
     </div>
 </div>
-
     @yield("content")
-
-<!---->
 </body>
-<script>
-    //连接socket服务器
-    //连接socket服务器
-    var ws = new WebSocket("ws://118.31.20.94:11223");
-
-    ws.onopen = function()
-    {
-        // Web Socket 已连接上，使用 send() 方法发送数据
-        setTimeout(function(){
-            var data = {
-                act:'send_t_u',
-                data:{
-                    f:'s_m_t_u',
-                    recepter:1,
-                    msg:'自己发送给自己的信息'
-                }
-            };
-            ws.send(JSON.stringify(data))
-        },3000)
-    };
-
-    ws.onmessage = function (evt)
-    {
-        var received_msg = evt.data;
-        console.log(evt,received_msg);
-    };
-
-    ws.onclose = function()
-    {
-        // 关闭 websocket
-        console.log("连接已关闭...");
-    };
-</script>
 </html>

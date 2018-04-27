@@ -12,19 +12,14 @@ use App\Pic;
 use App\User;
 use App\Userextend;
 use App\UserMessage;
-use helper\SwooleClient;
-use helper\SwooleServer;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
@@ -32,36 +27,26 @@ class ArticleController extends Controller
     public $arrOut = array("status" => -1,"message" => "参数错误");
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * 首页
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request,$key = 'world',$search = '')
     {
-        $userInfo = Auth::user();
-        //查询分类
-        $cateInfo = Category::where("level",0)->orderBy("id","asc")->get()->toArray();
-//        //获取分类文章
-//        foreach($cateInfo as $k => $v){
-//            $cateInfo[$k]["article"] = self::getDaily($v["id"]);
-//        }
         //$this->dispatch((new CollectionBook(17))->delay(2));
-        $fields = array('articles.*');
-        $where = array('articles.is_recommend' => 1);
+        //查询分类
+        $fields = array('*');
+        $where = array('is_recommend' => 1);
+        $search && $where['article_title'] = trim($search);
         $order = array('articles.views','desc');
         $data = Article::getList($fields,$where,$order,1,16);
         $articleList = $data ? $data['data'] : array();
-        $actionLi = 0;
-        return view('Home.index',compact("userInfo","cateInfo",'actionLi','articleList'));
+        return view('Home.index',compact('articleList','key','search'));
     }
 
     /**
      * 文章详情
      */
     public function detail(Request $request,$articleId){
-        //首页
-        $userInfo = Auth::user();
-
         try{
             self::encrytDeById($articleId);//解密
         }catch (DecryptException $e){
@@ -298,7 +283,6 @@ class ArticleController extends Controller
             );
         }
 
-
         $articleInfo["article_content"] = $articleInfo["editorValue"];
         $articleInfo["user_id"] = Auth::user()->id;
         $article = new Article();
@@ -482,25 +466,6 @@ class ArticleController extends Controller
     public static function getArticle($userId = ""){
         return $userId ? Article::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5) : Article::where(["user_id"=>Auth::user()->id,"is_show"=>1])->orderBy("id","desc")->paginate(5);
     }
-
-    /**
-     * 分类文章
-     * @param Request $request
-     */
-    public function categoryArticle(Request $request,$cateId){
-        //首页
-        $userInfo = Auth::user();
-        //查询分类
-        $cateInfo = Category::where("level",0)->orderBy("id","asc")->get();
-        $articleList = Article::where(["category"=>$cateId,"article_status"=>0,"is_show"=>1])->orderBy("id","desc")->paginate(15);
-        foreach ($articleList as $key => $val){
-            self::encrytById($articleList[$key]);
-        }
-        $actionLi = $cateId;
-        $cateItem = Category::where("id",$cateId)->first();//print_r($cateItem);die;
-        return view("Home.catearticle",compact("userInfo","cateInfo","actionLi","articleList","cateItem"));
-    }
-
 
     /**
      * 根据文章类型返回推荐文章

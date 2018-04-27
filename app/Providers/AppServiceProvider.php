@@ -17,19 +17,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-        //查询分类
-        $actionLi = 99;
-        view()->share('actionLi',$actionLi);
-        //查询分类
-        $cateInfo = Cache::remember('cateInfo', 3600, function() {
-            return Category::where("level",0)->orderBy("id","asc")->get();
-        });
-        foreach($cateInfo as $k => $v){
-            $cateInfo[$k]["article"] = ArticleController::getDaily($v["id"]);
-        }
-        //视图间共享数据
-        view()->share('cateInfo',$cateInfo);
+        $userInfo = Auth::user();
+        $key = 'world';
+        $search = '';
+        view()->share('userInfo',$userInfo);
+        view()->share('search',$search);
+        view()->share('key',$key);
     }
 
     /**

@@ -402,10 +402,11 @@
 						<h3 class="side-title-head">分类</h3>
 					</header>
 					<ul>
-						<li><a href="/">综合</a></li>
-						@foreach($cateInfo as $val)
-							<li><a href="/categoryarticle/{{$val->id}}">{{$val->category_name}}</a></li>
-						@endforeach
+						<li class="active"><a href="/blog/world">世界</a></li>
+						<li class="active"><a href="/blog/friend">好友</a></li>
+						<li class="active"><a href="/blog/own">我的</a></li>
+						<li class="active"><a href="/picturewall/old">热图</a></li>
+						<div class="clearfix"></div>
 					</ul>
 				</div>
 				<div class="newsletter">
