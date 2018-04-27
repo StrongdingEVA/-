@@ -5,6 +5,7 @@
  * Date: 2018/4/27 0027
  * Time: 10:43
  */
+use server;
 
 error_reporting(E_ALL);
 $rootPath = __DIR__;
