@@ -183,8 +183,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     socket.on('connection', function (data) {
         console.log(222222,data);
     });
-    console.log(socket);
-    socket.on('1:App\\Events\\SomeEvent', function(data){
+
+    socket.on('disconnect', function(data){
         console.log(111111,data);return;
     });
 </script>
