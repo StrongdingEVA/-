@@ -18,24 +18,24 @@ class WebsocketTest {
     public function __construct() {
         $this->server = new swoole_websocket_server("0.0.0.0", 11223);
 
-//        $this->server->set(array('task_worker_num' => 8));
-//
-//        $this->server->on('task',function(swoole_websocket_server $server,$task_id,$from_id, $data){
-//            echo "This Task {$task_id} from Worker {$from_id}\n";
-//            echo "Data: {$data}\n";
-//            for($i = 0 ; $i < 10 ; $i ++ ) {
-//                sleep(1);
-//                echo "Task {$task_id} Handle {$i} times...\n";
-//            }
-//            $fd = json_decode( $data , true )['fd'];
-//            $server->push( $fd , "Data in Task {$task_id}");
-//            return "Task {$task_id}'s result";
-//        });
-//
-//        $this->server->on('finish',function($server,$task_id, $data){
-//            echo "Task {$task_id} finish\n";
-//            echo "Result: {$data}\n";
-//        });
+        $this->server->set(array('task_worker_num' => 8));
+
+        $this->server->on('task',function(swoole_websocket_server $server,$task_id,$from_id, $data){
+            echo "This Task {$task_id} from Worker {$from_id}\n";
+            echo "Data: {$data}\n";
+            for($i = 0 ; $i < 10 ; $i ++ ) {
+                sleep(1);
+                echo "Task {$task_id} Handle {$i} times...\n";
+            }
+            $fd = json_decode( $data , true )['fd'];
+            $server->push( $fd , "Data in Task {$task_id}");
+            return "Task {$task_id}'s result";
+        });
+
+        $this->server->on('finish',function($server,$task_id, $data){
+            echo "Task {$task_id} finish\n";
+            echo "Result: {$data}\n";
+        });
 
 //        $this->server->on('handshake', function (swoole_http_request $request, swoole_http_response $response) {
 //            // websocket握手连接算法验证
@@ -85,7 +85,9 @@ class WebsocketTest {
             $server->push($request->fd,json_encode($temp)); //告诉自己当前连接人数
 
             foreach($this->connecter as $item){//通知其他人 有客人来了
-                $server->push($item['id'], "欢迎{$userInfo['name']}加入！");
+                if($item['id'] != $userInfo['id']){//自己就不通知了
+                    $server->push($item['id'], "欢迎{$userInfo['name']}加入！");
+                }
             }
             echo "server: handshake success with fd{$request->fd}\n";
         });
