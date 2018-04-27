@@ -10,10 +10,10 @@ class Msg{
     public function __construct(){
     }
 
-    public function run($that,$data){
+    public function run($server,$data){
         $fd = $data['recepter'];
         $msg = $data['msg'];
-        $that->server->push($fd, $msg);return;
+        $server->push(1, 12222222222222);return;
         $f = $data['f'];
         switch ($f){
             case 's_m_t_u':
