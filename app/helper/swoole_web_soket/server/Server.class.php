@@ -20,7 +20,7 @@ class Server {
         echo "\n";
         var_dump(function_exists('swoole_websocket_server'));
         echo "\n";
-        var_dump(get_extension_funcs('swoole'));
+        var_dump(swoole_version());
         echo "\n";exit;
         $this->server = new swoole_websocket_server($this->addr, $this->port);
         $this->server->on('open', function (swoole_websocket_server $server, $request) {
