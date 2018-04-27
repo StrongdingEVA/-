@@ -17,6 +17,7 @@ class Server {
 
     public function run(){
         $this->server = new swoole_websocket_server($this->addr, $this->port);
+        var_dump($this->server);exit;
         $this->server->on('open', function (swoole_websocket_server $server, $request) {
             echo "server: handshake success with fd{$request->fd}\n";
         });
@@ -34,7 +35,7 @@ class Server {
                 $this->server->push($fd, $request->get['message']);
             }
         });
-        
+
         $this->server->start();
     }
 }
