@@ -77,6 +77,9 @@ class WebsocketTest {
                 'name' => substr($str,rand(0,10),5)
             );
             $this->connecter[$request['fd']] = $userInfo;
+            $response->status(101);
+            $response->end();
+            return true;
         });
 
         $this->server->on('open', function (swoole_websocket_server $server, $request) {;
