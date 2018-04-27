@@ -15,7 +15,7 @@ class Server {
         $options['port'] && $this->port = $options['port'];
     }
 
-    public function run(){
+    public function run(){echo 1111;
         $this->server = new swoole_websocket_server($this->addr, $this->port);
         var_dump($this->server);exit;
         $this->server->on('open', function (swoole_websocket_server $server, $request) {
