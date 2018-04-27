@@ -1,0 +1,10 @@
+[27-Apr-2018 11:16:00 PRC] PHP Fatal error:  Class 'star\Star' not found in D:\phpStudy\WWW\swoole_web_soket\autoload\autoload.php on line 64
+[27-Apr-2018 11:16:49 PRC] PHP Fatal error:  Class 'star\Star' not found in D:\phpStudy\WWW\swoole_web_soket\autoload\autoload.php on line 64
+[27-Apr-2018 11:17:35 PRC] PHP Fatal error:  Class 'star\Star' not found in D:\phpStudy\WWW\swoole_web_soket\autoload\autoload.php on line 64
+[27-Apr-2018 11:17:51 PRC] PHP Fatal error:  Class 'star\Star' not found in D:\phpStudy\WWW\swoole_web_soket\autoload\autoload.php on line 64
+[27-Apr-2018 11:20:09 PRC] PHP Fatal error:  Class 'star\Star' not found in D:\phpStudy\WWW\swoole_web_soket\autoload\autoload.php on line 64
+[27-Apr-2018 11:20:27 PRC] PHP Fatal error:  Class 'star\Star' not found in D:\phpStudy\WWW\swoole_web_soket\autoload\autoload.php on line 64
+[27-Apr-2018 11:21:54 PRC] PHP Notice:  Undefined index: prot in D:\phpStudy\WWW\swoole_web_soket\server\Server.class.php on line 15
+[27-Apr-2018 11:21:54 PRC] PHP Fatal error:  Class 'server\swoole_websocket_server' not found in D:\phpStudy\WWW\swoole_web_soket\server\Server.class.php on line 17
+[27-Apr-2018 11:22:19 PRC] PHP Fatal error:  Class 'server\swoole_websocket_server' not found in D:\phpStudy\WWW\swoole_web_soket\server\Server.class.php on line 17
+[27-Apr-2018 11:23:36 PRC] PHP Fatal error:  Class 'server\swoole_websocket_server' not found in D:\phpStudy\WWW\swoole_web_soket\server\Server.class.php on line 17
