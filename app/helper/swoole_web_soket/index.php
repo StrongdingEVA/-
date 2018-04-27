@@ -70,7 +70,7 @@ class WebsocketTest {
             }
             $manage = new \manage\Msg();
 //            $manage = new $realyAct();
-            printf($manage);
+            printf($manage);echo 11111;return;
             $manage->run($server,$param);
 //            if($data['act'] == 'send_file'){//调用task
 //                $server->task(array('fd' => $frame->fd,'data' => 'this is file'));
