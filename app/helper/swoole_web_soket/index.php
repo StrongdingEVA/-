@@ -94,6 +94,12 @@ class WebsocketTest {
         $this->server->on('message', function (swoole_websocket_server $server, $frame) {
             $data = json_decode($frame->data,1);
             echo "receive from {$frame->fd}; act:{$data['act']}; data:{$data['data']},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+
+            if($data['act'] == 'send_file'){//调用task
+                $server->task($data['data']);
+            }
+
+
             $server->push($frame->fd, "this is server");
         });
         $this->server->on('close', function ($ser, $fd) {
