@@ -46,7 +46,7 @@ class WebsocketTest {
                     $server->push($item['id'], "欢迎{$userInfo['name']}加入！");
                 }
             }
-            $manage = new \manage\Msg();
+            $manage = new Msg();
             printf($manage);
             echo "server: handshake success with fd{$request->fd}\n";
         });
