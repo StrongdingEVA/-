@@ -6,14 +6,10 @@
  * Time: 10:52
  */
 namespace server;
-class Server {
+class WebsocketTest {
     public $server;
-    public $addr = '0.0.0.0';
-    public $port = '11223';
-    public function __construct($options = array()) {
-        $options['addr'] && $this->addr = $options['addr'];
-        $options['port'] && $this->port = $options['port'];
-        $this->server = new swoole_websocket_server('0.0.0.0', 11223);
+    public function __construct() {
+        $this->server = new swoole_websocket_server("0.0.0.0", 11223);
         $this->server->on('open', function (swoole_websocket_server $server, $request) {
             echo "server: handshake success with fd{$request->fd}\n";
         });
