@@ -271,6 +271,7 @@ class ArticleController extends BaseController
         }
         $userInfo = Auth::user();
         if(!$userInfo){
+            $articleInfo['isCollector'] = 0;
             return false;
         }
         $articleColletor = $articleInfo['collector'] ? json_decode($articleInfo['collector']) : array();
