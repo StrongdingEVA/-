@@ -92,7 +92,7 @@ class ArticleController extends BaseController
 
         self::isCollector($articleInfo);//是否收藏
         self::getCollector($articleInfo); //收藏的用户
-
+        echo 111;exit;
         $foucsInfo["single"] = Userextend::isFoucs($articleInfo['user_id']); //是否但方面关注
         $foucsInfo["bouth"] = Userextend::isFoucsBouth($articleInfo['user_id']); //是否互相关注
         \Helpers::htmlspecdecode($articleInfo,"article_content");
