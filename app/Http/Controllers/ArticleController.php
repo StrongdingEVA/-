@@ -89,8 +89,9 @@ class ArticleController extends BaseController
         $articleMastInfo["fans"] = User::getUserInfo(Userextend::useFans($articleInfo['user_id'])); //获取文章发布者的粉丝信息
         $articleMastInfo["foucs"] = User::getUserInfo(Userextend::useFoucs($articleInfo['user_id'])); //获取文章发布者的关注
         $articleMastInfo["articleHistory"] = self::getArticle($articleInfo['user_id']); //获取该文章作者最近发布记录
-     
+
         self::isCollector($articleInfo);//是否收藏
+        echo 3333;exit;
         self::getCollector($articleInfo); //收藏的用户
         echo 111;exit;
         $foucsInfo["single"] = Userextend::isFoucs($articleInfo['user_id']); //是否但方面关注
