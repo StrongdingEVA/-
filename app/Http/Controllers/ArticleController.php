@@ -46,7 +46,7 @@ class ArticleController extends BaseController
             }
             $whereIn = array('user_id',$foucs);
         }
-        print_r($whereIn);exit;
+
         $search && $where['article_title'] = trim($search);
         switch ($order){
             case 'hot':
