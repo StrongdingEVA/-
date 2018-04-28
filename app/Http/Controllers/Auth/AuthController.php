@@ -393,22 +393,6 @@ class AuthController extends Controller
         return 1;
     }
 
-    /**
-     * 获取用户信息
-     * @param $userIdArr array
-     */
-    public static function getUserInfo($userIdArr){
-        if(!is_array($userIdArr) || empty($userIdArr)){
-            return array();
-        }
-        $userInfoList = array();
-        foreach($userIdArr as $k => $v){
-            $info = User::where("id",$v)->first();
-            ArticleController::encrytById($info);
-            $userInfoList[] = $info;
-        }
-        return $userInfoList;
-    }
 
     /**
      * @param $type 1评论积分  2 发布文章积分 3 登录积分 4 点赞积分 5 取消点赞扣除积分 6 删除评论扣除积分

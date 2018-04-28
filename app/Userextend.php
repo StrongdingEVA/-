@@ -39,6 +39,11 @@ class Userextend extends Model
         return $userEx->article_collection ? json_decode($userEx->article_collection) : array();
     }
 
+    /**
+     * 获取用户所有拓展信息
+     * @param string $userId
+     * @return array
+     */
     public static function getUserExtendById($userId = ''){
         if(!$userId){
             return array();
@@ -49,4 +54,23 @@ class Userextend extends Model
             ->toArray();
     }
 
+    /**
+     * 获取用户的粉丝
+     * @param string $userId
+     * @return array|bool|mixed
+     */
+    public static function useFans($userId = ""){
+        $userEx = self::getUserExtendById($userId);
+        return empty($userEx['user_fans']) ? array() : json_decode($userEx['user_fans']);
+    }
+
+    /**
+     * 获取用户的关注
+     * @param string $userId
+     * @return array|bool|mixed
+     */
+    public static function useFoucs($userId = ""){
+        $userEx = self::getUserExtendById($userId);
+        return empty($userEx['user_foucs']) ? array() : json_decode($userEx['user_foucs']);
+    }
 }

@@ -79,4 +79,24 @@ class User extends Model implements AuthenticatableContract,
         $articleViews[] = $articleId;
         return Userextend::where("user_id",$userId)->update(["article_views" => json_encode($articleViews)]);
     }
+
+    /**
+     * 获取用户信息
+     * @param $userIdArr array
+     */
+    public static function getUserInfo($userIdArr){
+        if(empty($userIdArr)){
+            return array();
+        }
+        $param = '';
+        if(is_string($userIdArr)){
+            $param = array($userIdArr);
+        }else{
+            $param = $userIdArr;
+        }
+
+
+        $result = self::whereIn("id",$param)->get()->toArray();
+        return is_string($userIdArr) ? current($result) : $result;
+    }
 }

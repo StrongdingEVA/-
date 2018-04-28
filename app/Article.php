@@ -35,7 +35,7 @@ class Article extends Model
         if(!$articleId){
             return false;
         }
-        return Article::where("id",$articleId)->with("getUsername")->first();
+        return self::where("id",$articleId)->with("getUsername")->first()->toArray();
     }
 
     /**
@@ -43,7 +43,23 @@ class Article extends Model
      * @param string $userId
      */
     public static function getArticleToUser($userId = ""){
-        return $userId ? Article::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5) : Article::where(["user_id"=>Auth::user()->id,"is_show"=>1])->orderBy("id","desc")->paginate(5);
+        $userId = $userId ? $userId : Auth::user()->id;
+        return self::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5)->toArray();
+    }
+
+    /**
+     * 推荐一些热门评价的文章
+     * @param string $userId
+     * @return mixed
+     */
+    public function getArticleForHot($pageSize = 4){
+        //最近发布 并且评价较多的文章
+        $t = time() - 3600 * 24 * 5;
+        return self::where(["article_status"=>0,"is_show"=>1])
+            ->where("created_at",">=",$t)
+            ->orderBy("comments","desc")
+            ->paginate($pageSize)
+            ->toArray();
     }
 
     /**

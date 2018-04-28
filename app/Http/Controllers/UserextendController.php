@@ -81,28 +81,4 @@ class UserextendController extends Controller
         }
         return 0;
     }
-
-    /**
-     * 返回当前用户的关注
-     */
-    public static function useFoucs($userId = ""){
-        $userId = $userId ? $userId : Auth::user()->id;
-        if(!$userId){
-            return false;
-        }
-        $userEx = Userextend::where("user_id",$userId)->first();
-        return empty($userEx->user_foucs) ? array() : json_decode($userEx->user_foucs);
-    }
-
-    /**
-     * 返回当前用户的粉丝
-     */
-    public static function useFans($userId = ""){
-        $userId = $userId ? $userId : Auth::user()->id;
-        if(!$userId){
-            return false;
-        }
-        $userEx = Userextend::where("user_id",$userId)->first();
-        return empty($userEx->user_fans) ? array() : json_decode($userEx->user_fans);
-    }
 }

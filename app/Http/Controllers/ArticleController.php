@@ -48,6 +48,11 @@ class ArticleController extends BaseController
                 return view('Home.index',compact('articleList','key','search'));
             }
             $whereIn = array('user_id',$foucs);
+        }else if($key == 'own'){
+            if(!$this->uId){
+                return redirect('auth/login');exit();
+            }
+            $whereIn = array('user_id',[$this->uId]);
         }
 
         $search && $where['article_title'] = trim($search);
@@ -75,30 +80,17 @@ class ArticleController extends BaseController
      * 文章详情
      */
     public function detail(Request $request,$articleId){
-        try{
-            self::encrytDeById($articleId);//解密
-        }catch (DecryptException $e){
-            $message = "你TM有病啊！<br>随便改url里的参数~！<br>报错是你活该！";
-            return view("errors.503",compact("message"));
-        }
-
         //更新文章浏览次数
         User::updateViews($articleId);
 
         $articleInfo = Article::getArticleInfo($articleId);
-        $actionLi = $articleInfo->category;
+
         //推荐的文章
-        $articleHistory = self::getArticle($articleInfo->user_id);
-        $want = $this->getArticleForCate();
-        foreach($want as $ke => $va){
-            self::encrytById($want[$ke],"user_id");
-            self::encrytById($want[$ke]);
-        }
-
-        $articleMastInfo["want"] = $want; //可能想看
-        $articleMastInfo["fans"] = AuthController::getUserInfo(UserextendController::useFans($articleInfo->user_id)); // 粉丝的文章
-        $articleMastInfo["foucs"] = AuthController::getUserInfo(UserextendController::useFoucs($articleInfo->user_id)); //关注文章
-
+        $articleHistory = self::getArticle($articleInfo['user_id']); //获取该文章作者最近发布记录
+        $articleMastInfo["want"] =  Article::getArticleForHot(); //推荐最近热门文章
+        $articleMastInfo["fans"] = User::getUserInfo(Userextend::useFans($articleInfo['user_id'])); //获取文章发布者的粉丝信息
+        $articleMastInfo["foucs"] = User::getUserInfo(Userextend::useFoucs($articleInfo['user_id'])); //获取文章发布者的关注
+        print_r($articleMastInfo);exit;
         foreach($articleHistory as $k => $v){
             self::encrytById($articleHistory[$k],"user_id");
             self::encrytById($articleHistory[$k]);
