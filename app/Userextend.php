@@ -73,4 +73,36 @@ class Userextend extends Model
         $userEx = self::getUserExtendById($userId);
         return empty($userEx['user_foucs']) ? array() : json_decode($userEx['user_foucs']);
     }
+
+    /**
+     * 判断当前用户是否关注文章作者
+     * @param $userId 用户Id
+     */
+    public static function isFoucs($userIdTo){
+        $userIdNow = @Auth::user()->id;
+        if(!$userIdNow){
+            return 0;
+        }
+        $userFoucsNow = self::useFoucs($userIdNow);
+        if(in_array($userIdTo,$userFoucsNow)){
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
+     * 判断当前用户与此用户相互关注
+     * @param $userId 用户Id
+     */
+    public static function isFoucsBouth($userIdTo){
+        $userIdNow = @Auth::user()->id;
+        if(!$userIdNow){
+            return 0;
+        }
+        $userFoucsTo = self::useFoucs($userIdTo);
+        if(self::isFoucs($userIdTo) && in_array($userIdNow,$userFoucsTo)){
+            return 1;
+        }
+        return 0;
+    }
 }

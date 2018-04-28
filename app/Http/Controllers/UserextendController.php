@@ -45,40 +45,4 @@ class UserextendController extends Controller
         }
 
     }
-
-    /**
-     * 判断当前用户是否关注文章作者
-     * @param $userId 用户Id
-     */
-    public static function isFoucs($userIdTo){
-        $userIdNow = @Auth::user()->id;
-        if(!$userIdNow){
-            return 0;
-        }
-        $userExNow = Userextend::where("user_id",$userIdNow)->first();
-        $userFoucsNow = $userExNow->user_foucs ? json_decode($userExNow->user_foucs) : array();
-        if(in_array($userIdTo,$userFoucsNow)){
-            return 1;
-        }
-        return 0;
-    }
-
-    /**
-     * 判断当前用户与此用户相互关注
-     * @param $userId 用户Id
-     */
-    public static function isFoucsBouth($userIdTo){
-        $userIdNow = @Auth::user()->id;
-        if(!$userIdNow){
-            return 0;
-        }
-        $userExNow = Userextend::where("user_id",$userIdNow)->first();
-        $userExTo = Userextend::where("user_id",$userIdTo)->first();
-        $userFoucsNow = empty($userExNow->user_foucs) ? array() : json_decode($userExNow->user_foucs);
-        $userFoucsTo = empty($userExTo->user_foucs) ? array() : json_decode($userExTo->user_foucs);
-        if(in_array($userIdTo,$userFoucsNow) && in_array($userIdNow,$userFoucsTo)){
-            return 1;
-        }
-        return 0;
-    }
 }

@@ -85,26 +85,16 @@ class ArticleController extends BaseController
 
         $articleInfo = Article::getArticleInfo($articleId);
 
-        //推荐的文章
-        $articleHistory = self::getArticle($articleInfo['user_id']); //获取该文章作者最近发布记录
         $articleMastInfo["want"] =  Article::getArticleForHot(); //推荐最近热门文章
         $articleMastInfo["fans"] = User::getUserInfo(Userextend::useFans($articleInfo['user_id'])); //获取文章发布者的粉丝信息
         $articleMastInfo["foucs"] = User::getUserInfo(Userextend::useFoucs($articleInfo['user_id'])); //获取文章发布者的关注
-        print_r($articleMastInfo);exit;
-        foreach($articleHistory as $k => $v){
-            self::encrytById($articleHistory[$k],"user_id");
-            self::encrytById($articleHistory[$k]);
-        }
-
-        $articleMastInfo["articleHistory"] = $articleHistory;//发布过的文章
+        $articleMastInfo["articleHistory"] = self::getArticle($articleInfo['user_id']); //获取该文章作者最近发布记录
 
         self::isCollector($articleInfo);//是否收藏
         self::getCollector($articleInfo); //收藏的用户
-        self::encrytById($articleInfo);//加密
 
-        $foucsInfo["single"] = UserextendController::isFoucs($articleInfo->getUsername->id); //是否但方面关注
-        $foucsInfo["bouth"] = UserextendController::isFoucsBouth($articleInfo->getUsername->id); //是否互相关注
-        self::encrytById($articleInfo->getUsername);//加密
+        $foucsInfo["single"] = Userextend::isFoucs($articleInfo['user_id']); //是否但方面关注
+        $foucsInfo["bouth"] = Userextend::isFoucsBouth($articleInfo['user_id']); //是否互相关注
         \Helpers::htmlspecdecode($articleInfo,"article_content");
 
         $perPage = 15;
@@ -253,22 +243,21 @@ class ArticleController extends BaseController
     }
 
     /**
-     * 获取文章的点赞者
+     * 获取文章的点赞
      */
-    public static function getCollector(&$articleInfo){
+    public static function getCollector(&$articleInfo,$len = 10){
         if(!$articleInfo){
-            $articleInfo->collector = array();
             return;
         }
         $arrTemp = array();
-        $articleColletor = $articleInfo->collector ? json_decode($articleInfo->collector) : array();
+        $articleColletor = $articleInfo['collector'] ? json_decode($articleInfo['collector']) : array();
         foreach($articleColletor as $key => $val){
-            $arrTemp[] = User::where("id",$val)->first();
-            if($key > 10){
+            $arrTemp[] = User::getUserInfo($val);
+            if($key > $len){
                 break;
             }
         }
-        $articleInfo->collector = $arrTemp;
+        $articleInfo['collector'] = $arrTemp;
     }
 
     /**
@@ -278,15 +267,14 @@ class ArticleController extends BaseController
      */
     public static function isCollector(&$articleInfo){
         if(!$articleInfo){
-            return array();
+            return;
         }
-        $arrTemp = array();
         $userInfo = Auth::user();
         if(!$userInfo){
             return false;
         }
-        $articleColletor = $articleInfo->collector ? json_decode($articleInfo->collector) : array();
-        in_array($userInfo->id,$articleColletor) ? $articleInfo->isCollector = 1 : $articleInfo->isCollector = 0;
+        $articleColletor = $articleInfo['collector'] ? json_decode($articleInfo['collector']) : array();
+        in_array($userInfo['id'],$articleColletor) ? $articleInfo['isCollector'] = 1 : $articleInfo['isCollector'] = 0;
     }
 
     /**
