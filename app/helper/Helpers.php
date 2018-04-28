@@ -7,7 +7,7 @@ class Helpers{
         if(!$info){
             return false;
         }
-        $info->$key = htmlspecialchars_decode($info->$key);
+        $info[$key] = htmlspecialchars_decode($info[$key]);
     }
 
     public function GetLang() {
