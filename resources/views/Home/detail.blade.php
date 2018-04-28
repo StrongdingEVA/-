@@ -296,15 +296,6 @@
                                                     })
 												</script>
 											</div>
-											{{--@if($val["subAns"]>0 && $val["subAns"]<=9)--}}
-												{{--<div style="text-align: center;margin-top: 10px;">--}}
-													{{--<a href="jascript:void(0)" class="viewAnswer" data="{{$val["id"]}}">查看剩余{{$val["subAns"]}}条回复</a>--}}
-												{{--</div>--}}
-												{{--@elseif($val["subAns"] > 10)--}}
-												{{--<div style="text-align: center;margin-top: 10px;">--}}
-													{{--<a href="jascript:void(0)" class="viewAnswer" data="{{$val["id"]}}">查看剩余回复</a>--}}
-												{{--</div>--}}
-											{{--@endif--}}
 										@endif
 									</div>
 									<div style="width: 70%;min-height: 1px;display: none;position: fixed;top:1px;z-index:1001">
