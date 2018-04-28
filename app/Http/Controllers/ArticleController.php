@@ -36,7 +36,7 @@ class ArticleController extends BaseController
         //查询分类
         $fields = array('*');
         $where = array('is_recommend' => 1);
-        $whereIn = array(1,1);
+        $whereIn = array(1,[1]);
         $articleList = array();
         if($key == 'friend'){
             $extInfo = Userextend::getUserExtendById($this->uId);
