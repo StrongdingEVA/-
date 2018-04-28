@@ -3,13 +3,10 @@
 <head>
     <title>Mr.Tin Blog</title>
     <link href="/Home/css/bootstrap.css" rel='stylesheet' type='text/css' />
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="/Home/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/Home/js/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="/Home/js/blog.js"></script>
-    <!-- Custom Theme files -->
     <link href="/Home/css/style.css" rel="stylesheet" type="text/css" media="all" />
     <link rel="stylesheet" href="/Home/css/my.css">
-    <!-- Custom Theme files -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html; charset=utf-8" />
     <meta name="keywords" content="Express News Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
@@ -38,7 +35,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <div class="header">
     <div class="header-top">
         <div class="wrap">
-            <input type="hidden" id="userLogin" value="{{count($userInfo}}">
+            <input type="hidden" id="userLogin" value="{{count($userInfo)}}">
             <div class="top-menu">
                 <ul>
                     <li><a href="/">{{$userInfo ? $userInfo['username'] : '游客'}}&nbsp;&nbsp;<img src="{{$userInfo ? $userInfo['logo'] : '/upload/userimg/default.png'}}" height="28px" alt="{{$userInfo ? $userInfo['username'] : '游客'}}"></a></li>

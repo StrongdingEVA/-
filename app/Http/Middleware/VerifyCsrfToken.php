@@ -16,5 +16,6 @@ class VerifyCsrfToken extends BaseVerifier
         "auth/colletion",
         "uploadimgwall",
         "getansajax",
+        "answer"
     ];
 }

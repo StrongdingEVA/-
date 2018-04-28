@@ -88,7 +88,7 @@ class ArticleController extends BaseController
         $articleMastInfo["want"] =  Article::getArticleForHot(); //推荐最近热门文章
         $articleMastInfo["fans"] = User::getUserInfo(Userextend::useFans($articleInfo['user_id'])); //获取文章发布者的粉丝信息
         $articleMastInfo["foucs"] = User::getUserInfo(Userextend::useFoucs($articleInfo['user_id'])); //获取文章发布者的关注
-        $articleMastInfo["articleHistory"] = self::getArticle($articleInfo['user_id']); //获取该文章作者最近发布记录
+        $articleMastInfo["articleHistory"] = Article::getHistArticle($articleInfo['user_id']); //获取该文章作者最近发布记录
 
         self::isCollector($articleInfo);//是否收藏
         self::getCollector($articleInfo); //收藏的用户
@@ -127,7 +127,7 @@ class ArticleController extends BaseController
             $articleComment[$key]["totalPage"] = $totalPage;
             $articleComment[$key]["nowPage"] = 1;
         }
-        //print_r($articleMastInfo);
+
         return view("Home.detail",compact("userInfo","articleInfo","articleComment","actionLi","foucsInfo","articleMastInfo","paginator"));
     }
 
@@ -463,13 +463,6 @@ class ArticleController extends BaseController
         return Article::where("id","{$articleId}")->update(["collector" => json_encode($collector)]);
     }
 
-    /**
-     * 获取用户发布的文章信息
-     * @param string $userId
-     */
-    public static function getArticle($userId = ""){
-        return $userId ? Article::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5) : Article::where(["user_id"=>Auth::user()->id,"is_show"=>1])->orderBy("id","desc")->paginate(5)->toArray();
-    }
 
     /**
      * 根据文章类型返回推荐文章

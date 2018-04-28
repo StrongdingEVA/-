@@ -17,7 +17,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('createarticle', 'ArticleController@createArticle');//发布文章动作
     Route::get('publish', 'ArticleController@article'); //发布文章的页面
     Route::post('auth/authcomment', 'Auth\AuthController@userComment'); //文章评论
-    Route::post('auth/authanswer', 'Auth\AuthController@userAnswer'); //文章回复
+    Route::post('answer', 'Auth\AuthController@userAnswer'); //文章回复
     Route::get('auth/foucsusercancle/{id}', 'Auth\AuthController@foucsUserCancle'); //关注用户
     Route::get('picturewall', 'PictureWallController@index'); //照片墙
     Route::get('createpicwall', 'PictureWallController@getCreate'); //照片墙发布界面

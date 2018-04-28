@@ -18,7 +18,7 @@
 | loading any of our classes later on. It feels nice to relax.
 |
 */
-define(APP_DEBUG,true);
+//define(APP_DEBUG,true);
 require __DIR__.'/../bootstrap/autoload.php';
 
 /*

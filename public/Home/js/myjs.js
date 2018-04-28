@@ -12,7 +12,4 @@ $.extend({
             }
         })
     },
-    test:function(c){
-        c();
-    }
 });

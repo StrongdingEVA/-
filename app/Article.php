@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 
 class Article extends Model
 {
@@ -59,7 +60,16 @@ class Article extends Model
             ->where("created_at",">=",$t)
             ->orderBy("comments","desc")
             ->paginate($pageSize)
-            ->toArray();
+            ->toArray()['data'];
+    }
+
+    /**
+     * 推荐一些用户发布过的文章
+     * @param string $userId
+     */
+    public static function getHistArticle($userId){
+        $userId = $userId ? $userId : Auth::user()->id;
+        return self::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5)->toArray()['data'];
     }
 
     /**
