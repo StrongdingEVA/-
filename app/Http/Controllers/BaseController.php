@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class BaseController extends Controller{
     public function __construct(){
-        $userInfo = Auth::user()->toArray();
+        $userInfo = Auth::user()->username;
         print_r($userInfo);
     }
 }
