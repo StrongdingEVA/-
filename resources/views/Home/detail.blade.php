@@ -367,23 +367,23 @@
 			<div class="first_half">
 				<div class="categories">
 					<div class="user-info-1">
-						<img width="200px" src="{{$articleInfo['getUsername']['logo']}}" alt="">
+						<img width="200px" src="{{$articleInfo['get_username']['logo']}}" alt="">
 					</div>
 					<div class="user-info-2">
-						<a href="">{{$articleInfo['getUsername']['username']}}</a>
+						<a href="">{{$articleInfo['get_username']['username']}}</a>
 					</div>
 					<div class="user-info-2">
 						@if($foucsInfo["bouth"])
 							<a href="javascript:void(0)" id="foucsBouth" class="acolor">相互关注</a>
 						@endif
 						@if($foucsInfo["single"])
-							<a href="javascript:void(0)" type="1" class="acolor isFoucs" data="{{$articleInfo['getUsername']['id']}}">取消关注</a>
+							<a href="javascript:void(0)" type="1" class="acolor isFoucs" data="{{$articleInfo['get_username']['id']}}">取消关注</a>
 						@else
-							<a href="javascript:void(0)" type="0" class="acolor-h isFoucs" data="{{$articleInfo-['getUsername']['id']}}">关注</a>
+							<a href="javascript:void(0)" type="0" class="acolor-h isFoucs" data="{{$articleInfo-['get_username']['id']}}">关注</a>
 						@endif
 					</div>
 					<div class="user-info-2">
-						<a href="/sendMsg/{{$articleInfo['getUsername']['id']}}">发送私信</a>
+						<a href="/sendMsg/{{$articleInfo['get_username']['id']}}">发送私信</a>
 					</div>
 				</div>
 				<div class="categories">
