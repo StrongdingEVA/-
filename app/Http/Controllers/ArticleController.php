@@ -35,13 +35,17 @@ class ArticleController extends BaseController
         //$this->dispatch((new CollectionBook(17))->delay(2));
         //查询分类
         $fields = array('*');
-
+        $where = array('is_recommend' => 1);
+        $whereIn = array(1,array(1));
         if($key == 'friend'){
             $extInfo = Userextend::getUserExtendById($this->uId);
-            print_r($extInfo);
+            $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
+            if(!$foucs){
+                return view('Home.index',compact('articleList','key','search'));
+            }
+            $whereIn = array('user_id',$foucs);
         }
 
-        $where = array('is_recommend' => 1);
         $search && $where['article_title'] = trim($search);
         switch ($order){
             case 'hot':
@@ -58,7 +62,7 @@ class ArticleController extends BaseController
                 break;
         }
 
-        $data = Article::getList($fields,$where,$order,1,16);
+        $data = Article::getList($fields,$where,$whereIn,$order,1,16);
         $articleList = $data ? $data['data'] : array();
         return view('Home.index',compact('articleList','key','search'));
     }

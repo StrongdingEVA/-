@@ -55,8 +55,8 @@ class Article extends Model
      * @param int $pageSize
      * @return array
      */
-    public static function getList($fields = array(),$where = array(),$order = array(),$page = 1,$pageSize = 10){
-        $res = self::select('id')->where($where)->get()->toArray();
+    public static function getList($fields = array(),$where = array(),$whereIn = array(),$order = array(),$page = 1,$pageSize = 10){
+        $res = self::select('id')->where($where)->whereIn($where[0],$whereIn[1])->get()->toArray();
         if(!$res){
             return array();
         }
@@ -67,7 +67,7 @@ class Article extends Model
         }
         $result = self::select($fields)
             ->where($where)
-            ->whereIn('articles.id',$temp)
+            ->whereIn('id',$temp)
             ->orderBy($order[0],$order[1])
             ->with("getUsername")
             ->paginate($pageSize)

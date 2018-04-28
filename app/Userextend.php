@@ -45,7 +45,7 @@ class Userextend extends Model
         }
         return self::where('user_id',$userId)
             ->select('*')
-            ->get()
+            ->first()
             ->toArray();
     }
 
