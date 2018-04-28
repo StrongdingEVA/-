@@ -127,16 +127,16 @@
 			</div>
 			<div class="col-md-6 content-left single-post">
 				<div class="blog-posts">
-					<h3 class="post">{{$articleInfo->article_title}}</h3>
+					<h3 class="post">{{$articleInfo['article_title']}}</h3>
 					<div class="last-article">
 						<p class="artext">
-							{{$articleInfo->article_disc}}
+							{{$articleInfo['article_disc']}}
 						</p>
-						@if($articleInfo->category != 4)
+						@if($articleInfo['category'] != 4)
 						<div class="article-thumb">
-							<img src="{{$articleInfo->article_source_pic}}" width="100%" alt="图片加载失败！">
+							<img src="{{$articleInfo['article_source_pic']}}" width="100%" alt="图片加载失败！">
 						</div>
-						@elseif($articleInfo->article_video)
+						@elseif($articleInfo['article_video'])
                             <div class="video" id="CuPlayer"><b><img src="/Home/images/loading.gif"  /> 网页视频播放器加载中，请稍后...<a href="http://www.cuplayer.com/cuplayer" target="_blank">点此升级&gt;&gt;</a></b></div>
                             <!--极酷阳光播放器/代码开始-->
                             <script type="text/javascript" src="/Home/js/swfobject.js"></script>
@@ -205,34 +205,32 @@
                         @endif
 						<br>
 						<span class="article-content">
-							{!! $articleInfo->article_content !!}
+							{!! $articleInfo['article_content'] !!}
 						</span>
 
 						<ul class="like-ul">
-							{{--<li><a href="javascript:void(0)">浏览{{$articleInfo->views}}</a></li>--}}
 							<li>
 								<a class="span_link" href="javascript:void(0)">
-									<span class="glyphicon glyphicon-comment"></span>{{$articleInfo->comments}}
+									<span class="glyphicon glyphicon-comment"></span>{{$articleInfo['comments']}}
 								</a>
 								<a class="span_link" href="javascript:void(0)">
-									<span class="glyphicon glyphicon-eye-open"></span>{{$articleInfo->views}}
+									<span class="glyphicon glyphicon-eye-open"></span>{{$articleInfo['views']}}
 								</a>
-								@if($articleInfo->isCollector > 0)
-									<a class="span_link collecManage" style="color: #f00" type="1" id="cancelCollection" data="{{$articleInfo->id}}" href="javascript:void(0)">
-										<span class="glyphicon glyphicon-thumbs-up"></span>{{$articleInfo->collections}}
+								@if($articleInfo['isCollector'] > 0)
+									<a class="span_link collecManage" style="color: #f00" type="1" id="cancelCollection" data="{{$articleInfo['id']}}" href="javascript:void(0)">
+										<span class="glyphicon glyphicon-thumbs-up"></span>{{$articleInfo['collections']}}
 									</a>
 								@else
-									<a class="span_link collecManage" type="0" id="cancelCollection" data="{{$articleInfo->id}}" href="javascript:void(0)">
-										<span class="glyphicon glyphicon-thumbs-up"></span>{{$articleInfo->collections}}
+									<a class="span_link collecManage" type="0" id="cancelCollection" data="{{$articleInfo['id']}}" href="javascript:void(0)">
+										<span class="glyphicon glyphicon-thumbs-up"></span>{{$articleInfo['collections']}}
 									</a>
 								@endif
 							</li>
-							{{--<li><a href="javascript:void(0)">评论{{$articleInfo->comments}}</a></li>--}}
 						</ul>
 
 						<ul class="categories">
-							@foreach($articleInfo->collector as $val)
-								<li><a href="#"><img style="width: 40px;height: 40px;" src="{{$val->logo}}" alt="{{$val->username}}"></a></li>
+							@foreach($articleInfo['collector'] as $val)
+								<li><a href="#"><img style="width: 40px;height: 40px;" src="{{$val['logo']}}" alt="{{$val['username']}}"></a></li>
 							@endforeach
 						</ul>
 						<div class="clearfix"></div>
@@ -348,10 +346,10 @@
 
 					<!--related-posts-->
 					<div class="row related-posts" id="gallery-wrapper">
-						@foreach($articleMastInfo["want"] as $val)
+						@foreach($articleMastInfo["want"]['data'] as $val)
 							<article class="white-panel">
-								<a href="/article_detail/{{$val->id}}">
-									<img src="@if($val->article_thumb) {{$val->article_thumb}} @else /Home/images/logo.jpg @endif" class="thumb" title="{{$val->article_title}}">
+								<a href="/article_detail/{{$val['id']}}">
+									<img src="@if($val['article_thumb']) {{$val['article_thumb']}} @else /Home/images/logo.jpg @endif" class="thumb" title="{{$val['article_title']}}">
 								</a>
 							</article>
 						@endforeach
@@ -426,23 +424,23 @@
 							<div class="content" id="a1">
 								<div class="scrollbar" id="style-2">
 									<div class="force-overflow">
-										@foreach($articleMastInfo["articleHistory"] as $item)
+										@foreach($articleMastInfo["articleHistory"]['data'] as $item)
 											<div class="popular-post-grids">
 												<div class="popular-post-grid">
 													<div class="post-img">
-														<a href="/article_detail/{{ $item->id }}"><img src="{{$item->article_thumb}}" alt="" /></a>
+														<a href="/article_detail/{{ $item['id']}}"><img src="{{$item['article_thumb']}}" alt="" /></a>
 													</div>
 													<div class="post-text">
-														<a class="pp-title" href="/article_detail/{{ $item->id }}"> {{$item->article_disc}}</a>
-														<p>{{$item->created_at}}
+														<a class="pp-title" href="/article_detail/{{ $item['id']}}"> {{$item['article_disc']}}</a>
+														<p>{{$item['created_at']}}
 															<a class="span_link" href="javascript:void(0)">
-																<span class="glyphicon glyphicon-comment"></span>{{$item->comments}}
+																<span class="glyphicon glyphicon-comment"></span>{{$item['comments']}}
 															</a>
 															<a class="span_link" href="javascript:void(0)">
-																<span class="glyphicon glyphicon-eye-open"></span>{{$item->views}}
+																<span class="glyphicon glyphicon-eye-open"></span>{{$item['views']}}
 															</a>
 															<a class="span_link" href="javascript:void(0)">
-																<span class="glyphicon glyphicon-thumbs-up"></span>{{$item->collections}}
+																<span class="glyphicon glyphicon-thumbs-up"></span>{{$item['collections']}}
 															</a>
 														</p>
 													</div>
@@ -469,8 +467,8 @@
 											  @foreach($articleMastInfo["fans"] as $val)
 												  <li>
 													  <a href="#">
-														  <img style="width: 40px;height: 40px;" src="{{$val->logo}}" alt="{{$val->username}}">
-													  		{{$val->username}}
+														  <img style="width: 40px;height: 40px;" src="{{$val['logo']}}" alt="{{$val['username']}}">
+													  		{{$val['username']}}
 													  </a>
 												  </li>
 											  @endforeach
@@ -494,8 +492,8 @@
 										@foreach($articleMastInfo["foucs"] as $val)
 											<li>
 												<a href="#">
-													<img style="width: 40px;height: 40px;" src="{{$val->logo}}" alt="{{$val->username}}">
-													{{$val->username}}
+													<img style="width: 40px;height: 40px;" src="{{$val['logo']}}" alt="{{$val['username']}}">
+													{{$val['username']}}
 												</a>
 											</li>
 										@endforeach

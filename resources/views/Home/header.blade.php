@@ -38,10 +38,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <div class="header">
     <div class="header-top">
         <div class="wrap">
-            <input type="hidden" id="userLogin" value="{{count(@\Illuminate\Support\Facades\Auth::user())}}">
+            <input type="hidden" id="userLogin" value="{{count($userInfo}}">
             <div class="top-menu">
                 <ul>
-                    <li><a href="/">{{@\Illuminate\Support\Facades\Auth::user() ? @\Illuminate\Support\Facades\Auth::user()->username : '游客'}}&nbsp;&nbsp;<img src="{{@\Illuminate\Support\Facades\Auth::user() ? @\Illuminate\Support\Facades\Auth::user()->logo : '/upload/userimg/default.png'}}" height="28px" alt="{{@\Illuminate\Support\Facades\Auth::user() ? @\Illuminate\Support\Facades\Auth::user()->username : '游客'}}"></a></li>
+                    <li><a href="/">{{$userInfo ? $userInfo['username'] : '游客'}}&nbsp;&nbsp;<img src="{{$userInfo ? $userInfo['logo'] : '/upload/userimg/default.png'}}" height="28px" alt="{{$userInfo ? $userInfo['username'] : '游客'}}"></a></li>
                     <li><a href="/publish">发布文章</a></li>
                     <li><a href="contact.html">我的收藏</a></li>
                     <li><a href="about.html">关于我们</a></li>
@@ -50,7 +50,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             我的消息
                         </a>
                     </li>
-                    @if(count(@\Illuminate\Support\Facades\Auth::user())>0)
+                    @if($userInfo)
                         <li><a href="/auth/logout">退出</a></li>
                     @else
                         <li><a href="/auth/login">登录</a></li>
