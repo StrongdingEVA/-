@@ -379,7 +379,7 @@
 						@if($foucsInfo["single"])
 							<a href="javascript:void(0)" type="1" class="acolor isFoucs" data="{{$articleInfo['get_username']['id']}}">取消关注</a>
 						@else
-							<a href="javascript:void(0)" type="0" class="acolor-h isFoucs" data="{{$articleInfo-['get_username']['id']}}">关注</a>
+							<a href="javascript:void(0)" type="0" class="acolor-h isFoucs" data="{{$articleInfo['get_username']['id']}}">关注</a>
 						@endif
 					</div>
 					<div class="user-info-2">

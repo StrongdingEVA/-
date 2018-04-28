@@ -96,7 +96,7 @@ class ArticleController extends BaseController
         $foucsInfo["single"] = Userextend::isFoucs($articleInfo['user_id']); //是否但方面关注
         $foucsInfo["bouth"] = Userextend::isFoucsBouth($articleInfo['user_id']); //是否互相关注
         \Helpers::htmlspecdecode($articleInfo,"article_content");
-        
+
         $perPage = 15;
         if ($request->has('page')) {
             $current_page = $request->input('page');
