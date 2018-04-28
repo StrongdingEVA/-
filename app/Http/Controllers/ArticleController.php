@@ -30,14 +30,33 @@ class ArticleController extends Controller
      * 首页
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request,$key = 'world',$search = '')
+    public function index(Request $request,$key = 'world',$order = 'hot',$search = '')
     {
         //$this->dispatch((new CollectionBook(17))->delay(2));
         //查询分类
         $fields = array('*');
+
+        if($key == 'friend'){
+            $extInfo = Userextend::getUserExtendById();
+        }
+
         $where = array('is_recommend' => 1);
         $search && $where['article_title'] = trim($search);
-        $order = array('articles.views','desc');
+        switch ($order){
+            case 'hot':
+                $order = array('comments','desc');
+                break;
+            case 'new':
+                $order = array('create_at','desc');
+                break;
+            case 'old':
+                $order = array('create_at','asc');
+                break;
+            default:
+                $order = array('comments','desc');
+                break;
+        }
+
         $data = Article::getList($fields,$where,$order,1,16);
         $articleList = $data ? $data['data'] : array();
         return view('Home.index',compact('articleList','key','search'));

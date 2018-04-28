@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class Userextend extends Model
 {
     //
-    protected $fillable = ['user_id', 'article_collection','article_views'];
+    protected $fillable = ['user_id', 'article_collection','article_views','user_foucs','user_fans'];
 
     /**
      * @param string $userId
@@ -17,7 +17,7 @@ class Userextend extends Model
      */
     public static function getFrequencyCate($userId = ""){
         $userId = $userId ? $userId : Auth::user()->id;
-        $userCollection = Userextend::getUserFrequency($userId);
+        $userCollection = self::getUserFrequency($userId);
         $c = count($userCollection);
         if($c == 0){
             return array();
@@ -37,6 +37,15 @@ class Userextend extends Model
     public static function getUserFrequency($userId = ""){
         $userEx = $userId ? Userextend::where("user_id",$userId)->first() : Userextend::where("user_id",Auth::user()->id)->first();
         return $userEx->article_collection ? json_decode($userEx->article_collection) : array();
+    }
+
+    public static function getUserExtendById($userId = ''){
+        if(!$userId){
+            return array();
+        }
+        return self::where('user_id',$userId)
+            ->select('*')
+            ->get();
     }
 
 }

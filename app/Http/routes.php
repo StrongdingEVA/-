@@ -29,7 +29,7 @@ Route::group(['middleware' => 'auth'],function(){
 	Route::post('/doSendMsg', 'Auth\AuthController@sendMsgPost'); //发送私信
 });
 
-Route::get('/blog/{key?}/{search?}', 'ArticleController@index');
+Route::get('/blog/{key?}/{order?}/{search?}', 'ArticleController@index');
 Route::get('', 'ArticleController@index');
 
 Route::get('article_detail/{id}', 'ArticleController@detail');//文章详情
