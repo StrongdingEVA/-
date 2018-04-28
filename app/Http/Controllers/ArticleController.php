@@ -91,8 +91,7 @@ class ArticleController extends BaseController
         $articleMastInfo["articleHistory"] = self::getArticle($articleInfo['user_id']); //获取该文章作者最近发布记录
 
         self::isCollector($articleInfo);//是否收藏
-        echo 3333;exit;
-        self::getCollector($articleInfo); //收藏的用户
+        self::getCollector($articleInfo,10); //收藏的用户
         echo 111;exit;
         $foucsInfo["single"] = Userextend::isFoucs($articleInfo['user_id']); //是否但方面关注
         $foucsInfo["bouth"] = Userextend::isFoucsBouth($articleInfo['user_id']); //是否互相关注
