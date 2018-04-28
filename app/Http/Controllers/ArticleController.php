@@ -115,7 +115,7 @@ class ArticleController extends BaseController
             'pageName' => 'page',
         ]);
 
-        $articleComment = $paginator->toArray()['data'];
+        $articleComment = $paginator->toArray()['data'];print_r($articleComment);exit;
         foreach($articleComment as $key => $val){
             $totalPage = 0;
             self::encrytById($articleComment[$key],"user_id",1);
