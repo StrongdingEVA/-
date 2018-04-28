@@ -40,7 +40,7 @@ class ArticleController extends BaseController
         $articleList = array();
         if($key == 'friend'){
             if(!$this->uId){
-                redirect('auth/login');exit();
+                return redirect('auth/login');exit();
             }
             $extInfo = Userextend::getUserExtendById($this->uId);
             $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
