@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class ArticleController extends Controller
+class ArticleController extends BaseController
 {
     public $arrOut = array("status" => -1,"message" => "参数错误");
 
