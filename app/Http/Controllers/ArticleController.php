@@ -127,7 +127,7 @@ class ArticleController extends BaseController
             $articleComment[$key]["totalPage"] = $totalPage;
             $articleComment[$key]["nowPage"] = 1;
         }
-        print_r($articleMastInfo);
+        //print_r($articleMastInfo);
         return view("Home.detail",compact("userInfo","articleInfo","articleComment","actionLi","foucsInfo","articleMastInfo","paginator"));
     }
 
@@ -468,7 +468,7 @@ class ArticleController extends BaseController
      * @param string $userId
      */
     public static function getArticle($userId = ""){
-        return $userId ? Article::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5) : Article::where(["user_id"=>Auth::user()->id,"is_show"=>1])->orderBy("id","desc")->paginate(5);
+        return $userId ? Article::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5) : Article::where(["user_id"=>Auth::user()->id,"is_show"=>1])->orderBy("id","desc")->paginate(5)->toArray();
     }
 
     /**
