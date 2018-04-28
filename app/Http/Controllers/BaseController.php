@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class BaseController extends Controller{
     public $uId = '';
     public $uInfo = '';
-    
+
     public function __construct(){
         $userInfo = Auth::user();
         $temp = array();
