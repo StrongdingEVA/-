@@ -127,7 +127,7 @@ class ArticleController extends BaseController
             $articleComment[$key]["totalPage"] = $totalPage;
             $articleComment[$key]["nowPage"] = 1;
         }
-        //print_r($articleComment);die;
+        print_r($articleMastInfo);
         return view("Home.detail",compact("userInfo","articleInfo","articleComment","actionLi","foucsInfo","articleMastInfo","paginator"));
     }
 
