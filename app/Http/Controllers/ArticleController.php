@@ -91,7 +91,7 @@ class ArticleController extends BaseController
         $articleMastInfo["articleHistory"] = self::getArticle($articleInfo['user_id']); //获取该文章作者最近发布记录
 
         self::isCollector($articleInfo);//是否收藏
-        self::getCollector($articleInfo,10); //收藏的用户
+        self::getCollector($articleInfo); //收藏的用户
 
         $foucsInfo["single"] = Userextend::isFoucs($articleInfo['user_id']); //是否但方面关注
         $foucsInfo["bouth"] = Userextend::isFoucsBouth($articleInfo['user_id']); //是否互相关注
@@ -245,18 +245,13 @@ class ArticleController extends BaseController
     /**
      * 获取文章的点赞
      */
-    public static function getCollector(&$articleInfo,$len = 10){
+    public static function getCollector(&$articleInfo){
         if(!$articleInfo){
             return;
         }
         $arrTemp = array();
         $articleColletor = $articleInfo['collector'] ? json_decode($articleInfo['collector'],1) : array();
-        foreach($articleColletor as $key => $val){
-            $arrTemp[] = User::getUserInfo($val);
-            if($key > $len){
-                break;
-            }
-        }
+        User::getUserInfo($articleColletor);
         $articleInfo['collector'] = $arrTemp;
     }
 
