@@ -17,10 +17,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $userInfo = Auth::user();
         $key = 'world';
         $search = '';
-        view()->share('userInfo',$userInfo);
         view()->share('search',$search);
         view()->share('key',$key);
     }
