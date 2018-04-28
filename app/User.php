@@ -89,7 +89,7 @@ class User extends Model implements AuthenticatableContract,
             return array();
         }
         $param = '';
-        if(is_string($userIdArr)){
+        if(is_string($userIdArr) || is_numeric($userIdArr)){
             $param = array($userIdArr);
         }else{
             $param = $userIdArr;

@@ -249,8 +249,8 @@ class ArticleController extends BaseController
         if(!$articleInfo){
             return;
         }
-        $arrTemp = array();print_r($articleInfo);
-        $articleColletor = $articleInfo['collector'] ? json_decode($articleInfo['collector'],1) : array();print_r($articleColletor);exit;
+        $arrTemp = array();
+        $articleColletor = $articleInfo['collector'] ? json_decode($articleInfo['collector'],1) : array();
         foreach($articleColletor as $key => $val){
             $arrTemp[] = User::getUserInfo($val);
             if($key > $len){
