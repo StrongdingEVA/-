@@ -37,10 +37,11 @@ class ArticleController extends BaseController
         $fields = array('*');
         $where = array('is_recommend' => 1);
         $whereIn = array(1,array(1));
+        $articleList = array();
         if($key == 'friend'){
             $extInfo = Userextend::getUserExtendById($this->uId);
-            $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();print_r($foucs);exit;
-            if(!$foucs){echo 111;exit;
+            $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
+            if(!$foucs){
                 return view('Home.index',compact('articleList','key','search'));
             }
             $whereIn = array('user_id',$foucs);
