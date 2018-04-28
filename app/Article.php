@@ -56,7 +56,11 @@ class Article extends Model
      * @return array
      */
     public static function getList($fields = array(),$where = array(),$whereIn = array(),$order = array(),$page = 1,$pageSize = 10){
-        $res = self::select('id')->where($where)->whereIn(1,[1])->get()->toArray();
+        $res = self::select('id')->where($where);
+        if($whereIn){
+            $res = $res->whereIn($whereIn[0],$whereIn[1]);
+        }
+        $res = $res->get()->toArray();
         if(!$res){
             return array();
         }
