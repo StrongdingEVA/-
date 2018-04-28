@@ -152,7 +152,7 @@
                                 so.addVariable("JcScpFile","/Home/js/CuSunV4set.xml"); //配置文件地址
                                 //视频文件及略缩图--------------------------
                                 //so.addVariable("JcScpServer","rtmp://www.yoursite.com/vod"); //流媒体服务器地址
-                                so.addVariable("JcScpVideoPath","{{$articleInfo->article_video}}"); //视频地址
+                                so.addVariable("JcScpVideoPath","{{$articleInfo['article_video']}}"); //视频地址
                                 //so.addVariable("JcScpVideoPathHD","http://demo.cuplayer.com/file/test.mp4"); //高清视频地址
                                 so.addVariable("JcScpImg","images/startpic.jpg"); //视频图片
                                 so.addVariable("JcScpAutoPlay","yes"); //是否自动播放
@@ -301,7 +301,7 @@
 									<div style="width: 70%;min-height: 1px;display: none;position: fixed;top:1px;z-index:1001">
 										<div id="{{$val["id"]}}"></div>
 										<div class="input-group mar-top" id="btndiv{{$val["id"]}}" style="margin-top: 20px;display: none;position:absolute;right: 30px">
-											<input id="createedui{{$val["id"]}}" data="{{$val["id"]}}" type="button" articleid="{{$articleInfo->id}}" commentId="0" touserid="0" class="btn btn-primary btn-sm edui" value="回复">
+											<input id="createedui{{$val["id"]}}" data="{{$val["id"]}}" type="button" articleid="{{$articleInfo['id']}}" commentId="0" touserid="0" class="btn btn-primary btn-sm edui" value="回复">
 										</div>
 									</div>
 								</div>
@@ -321,7 +321,7 @@
 
 					<div class="coment-form">
 						<form action="/auth/authcomment" method="post">
-							<input type="hidden" name="articleid" value="{{ $articleInfo->id }}">
+							<input type="hidden" name="articleid" value="{{ $articleInfo['id'] }}">
 							<input type="hidden" type="text" name="_token" value="{{ csrf_token() }}">
 							<div class="grid_3 grid_5" id="editor"></div>
 							<script>
@@ -367,23 +367,23 @@
 			<div class="first_half">
 				<div class="categories">
 					<div class="user-info-1">
-						<img width="200px" src="{{$articleInfo->getUsername->logo}}" alt="">
+						<img width="200px" src="{{$articleInfo['getUsername']['logo']}}" alt="">
 					</div>
 					<div class="user-info-2">
-						<a href="">{{$articleInfo->getUsername->username}}</a>
+						<a href="">{{$articleInfo['getUsername']['username']}}</a>
 					</div>
 					<div class="user-info-2">
 						@if($foucsInfo["bouth"])
 							<a href="javascript:void(0)" id="foucsBouth" class="acolor">相互关注</a>
 						@endif
 						@if($foucsInfo["single"])
-							<a href="javascript:void(0)" type="1" class="acolor isFoucs" data="{{$articleInfo->getUsername->id}}">取消关注</a>
+							<a href="javascript:void(0)" type="1" class="acolor isFoucs" data="{{$articleInfo['getUsername']['id']}}">取消关注</a>
 						@else
-							<a href="javascript:void(0)" type="0" class="acolor-h isFoucs" data="{{$articleInfo->getUsername->id}}">关注</a>
+							<a href="javascript:void(0)" type="0" class="acolor-h isFoucs" data="{{$articleInfo-['getUsername']['id']}}">关注</a>
 						@endif
 					</div>
 					<div class="user-info-2">
-						<a href="/sendMsg/{{$articleInfo->getUsername->id}}">发送私信</a>
+						<a href="/sendMsg/{{$articleInfo['getUsername']['id']}}">发送私信</a>
 					</div>
 				</div>
 				<div class="categories">
