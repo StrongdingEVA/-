@@ -13,6 +13,6 @@ abstract class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function __construct(){
-        $userInfo = Auth::user();print_r($userInfo);exit;
+        $userInfo = Auth::user();print_r($userInfo);
     }
 }
