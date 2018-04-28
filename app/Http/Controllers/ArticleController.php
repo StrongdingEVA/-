@@ -39,6 +39,9 @@ class ArticleController extends BaseController
         $whereIn = array();
         $articleList = array();
         if($key == 'friend'){
+            if(!$this->uId){
+                redirect('/');
+            }
             $extInfo = Userextend::getUserExtendById($this->uId);
             $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
             if(!$foucs){
