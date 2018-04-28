@@ -52,7 +52,7 @@ class Article extends Model
      * @param string $userId
      * @return mixed
      */
-    public function getArticleForHot($pageSize = 4){
+    public static function getArticleForHot($pageSize = 4){
         //最近发布 并且评价较多的文章
         $t = time() - 3600 * 24 * 5;
         return self::where(["article_status"=>0,"is_show"=>1])
