@@ -40,7 +40,7 @@ class ArticleController extends BaseController
         if($key == 'friend'){
             $extInfo = Userextend::getUserExtendById($this->uId);
             $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
-            if(!$foucs){
+            if(!$foucs){echo 111;exit;
                 return view('Home.index',compact('articleList','key','search'));
             }
             $whereIn = array('user_id',$foucs);
