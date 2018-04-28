@@ -92,11 +92,11 @@ class ArticleController extends BaseController
 
         self::isCollector($articleInfo);//是否收藏
         self::getCollector($articleInfo,10); //收藏的用户
-        
+
         $foucsInfo["single"] = Userextend::isFoucs($articleInfo['user_id']); //是否但方面关注
         $foucsInfo["bouth"] = Userextend::isFoucsBouth($articleInfo['user_id']); //是否互相关注
         \Helpers::htmlspecdecode($articleInfo,"article_content");
-
+        echo 11111;exit;
         $perPage = 15;
         if ($request->has('page')) {
             $current_page = $request->input('page');
