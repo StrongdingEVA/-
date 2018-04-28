@@ -37,7 +37,8 @@ class ArticleController extends BaseController
         $fields = array('*');
 
         if($key == 'friend'){
-            $extInfo = Userextend::getUserExtendById();
+            $extInfo = Userextend::getUserExtendById($this->uId);
+            print_r($extInfo);
         }
 
         $where = array('is_recommend' => 1);
