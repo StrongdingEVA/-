@@ -84,7 +84,7 @@ class ArticleController extends BaseController
         User::updateViews($articleId);
 
         $articleInfo = Article::getArticleInfo($articleId);
-
+        echo 333;exit;
         $articleMastInfo["want"] =  Article::getArticleForHot(); //推荐最近热门文章
         $articleMastInfo["fans"] = User::getUserInfo(Userextend::useFans($articleInfo['user_id'])); //获取文章发布者的粉丝信息
         $articleMastInfo["foucs"] = User::getUserInfo(Userextend::useFoucs($articleInfo['user_id'])); //获取文章发布者的关注
