@@ -261,7 +261,7 @@ class AuthController extends Controller
         $res_3 = User::pointManage(4,true);
         $res_4 = PointrecordController::insertRecord(4);
         if(!$res_1 || !$res_2 || !$res_3 || !$res_4){
-            DB:rollBack();
+            DB:rollback();
             \Helpers::echoJsonAjax(-1,"收藏失败");
         }
         DB::commit();
