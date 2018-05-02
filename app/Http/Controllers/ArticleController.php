@@ -4,20 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Answer;
 use App\Article;
-use App\Category;
 use App\Comment;
 use App\Http\Controllers\Auth\AuthController;
-use App\Jobs\CollectionBook;
-use App\Pic;
 use App\User;
 use App\Userextend;
-use App\UserMessage;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -79,13 +72,13 @@ class ArticleController extends BaseController
     /**
      * 文章详情
      */
-    public function detail(Request $request,$articleId,$commentId = '',$comType = '',$c_id = ''){
+    public function detail(Request $request,$id,$cid = '',$aid = '',$type = ''){
         //更新文章浏览次数
-        User::updateViews($articleId);
+        User::updateViews($id);
 
 //        $c_id && UserMessage::where("id","{$c_id}")->update(["status"=>1]);
 
-        $articleInfo = Article::getArticleInfo($articleId);
+        $articleInfo = Article::getArticleInfo($id);
 
         $articleMastInfo["want"] =  Article::getArticleForHot(); //推荐最近热门文章
         $articleMastInfo["fans"] = User::getUserInfo(Userextend::useFans($articleInfo['user_id'])); //获取文章发布者的粉丝信息
@@ -107,8 +100,8 @@ class ArticleController extends BaseController
             $current_page = 1;
         }
 
-        $result = Comment::getCommentList(3,array('comments.article_id' => $articleId),array('comments.id','asc'),$current_page,$perPage);
-
+        $result = Comment::getCommentList($cid,$id,array('comments.article_id' => $id),array('comments.id','asc'),$current_page,$perPage);
+        //print_r($result);exit;
         $articleComment = $result['data'];
         $paginator = $result['paginator'];
         foreach($articleComment as $key => $val){
@@ -117,115 +110,18 @@ class ArticleController extends BaseController
             self::encrytById($articleComment[$key],"article_id",1);
             $articleComment[$key]["article_comment"] = htmlspecialchars_decode($val["article_comment"]);
             $articleComment[$key]["answer"] = Answer::getAnswer($val["id"],$totalPage);
-            $c = count(Answer::where("comment_id",$val["id"])->get());
-            $articleComment[$key]["subAns"] = $c - 5 > 0 ? $c - 5 : 0;
+            $articleComment[$key]["subAns"] = $totalPage - 5 > 0 ? $totalPage - 5 : 0;
             $articleComment[$key]["totalPage"] = $totalPage;
             $articleComment[$key]["nowPage"] = 1;
         }
+        if($type == 2){//回复
+            $arrFind = array($aid,$type);
+        }else if($type == 1){//评论
+            $arrFind = array($cid,$type);
+        }
 
-        $arrFind = array($commentId,$comType);
         return view("Home.detail",compact("userInfo","articleInfo","articleComment","actionLi","foucsInfo","articleMastInfo","paginator","arrFind"));
     }
-
-    /**
-     * 文章详情
-     */
-    public function detail_2(Request $request,$articleId,$commentId,$comType,$c_id){
-        //首页
-        $userInfo = Auth::user();
-
-        try{
-            self::encrytDeById($articleId);//解密
-        }catch (DecryptException $e){
-            $message = "你TM有病啊！<br>随便改url里的参数~！<br>报错是你活该！";
-            return view("errors.503",compact("message"));
-        }
-
-        //更新文章浏览次数
-        User::updateViews($articleId);
-
-        //更新消息已读
-
-        UserMessage::where("id","{$c_id}")->update(["status"=>1]);
-
-        $articleInfo = Article::getArticleInfo($articleId);
-        $actionLi = $articleInfo->category;
-        //推荐的文章
-        $articleHistory = self::getArticle($articleInfo->user_id);
-        $want = $this->getArticleForCate();
-        foreach($want as $ke => $va){
-            self::encrytById($want[$ke],"user_id");
-            self::encrytById($want[$ke]);
-        }
-
-        $articleMastInfo["want"] = $want; //可能想看
-        $articleMastInfo["fans"] = AuthController::getUserInfo(UserextendController::useFans($articleInfo->user_id)); // 粉丝的文章
-        $articleMastInfo["foucs"] = AuthController::getUserInfo(UserextendController::useFoucs($articleInfo->user_id)); //关注文章
-
-        foreach($articleHistory as $k => $v){
-            self::encrytById($articleHistory[$k],"user_id");
-            self::encrytById($articleHistory[$k]);
-        }
-
-        $articleMastInfo["articleHistory"] = $articleHistory;//发布过的文章
-
-        self::isCollector($articleInfo);//是否收藏
-        self::getCollector($articleInfo); //收藏的用户
-        self::encrytById($articleInfo);//加密
-
-        $foucsInfo["single"] = UserextendController::isFoucs($articleInfo->getUsername->id); //是否但方面关注
-        $foucsInfo["bouth"] = UserextendController::isFoucsBouth($articleInfo->getUsername->id); //是否互相关注
-        self::encrytById($articleInfo->getUsername);//加密
-        \Helpers::htmlspecdecode($articleInfo,"article_content");
-
-        $perPage = 15;
-        if ($request->has('page')) {
-            $current_page = $request->input('page');
-            $current_page = $current_page <= 0 ? 1 :$current_page;
-        } else {
-            $current_page = 1;
-        }
-
-        $comList = Comment::join("users","users.id","=","comments.user_id")
-            ->select("comments.*","users.username","users.logo")->where("article_id",$articleId)->orderBy("id","asc")->get()->toArray();
-        //判断当前评论在第几页
-        if($comType == 1){
-            $k = 0;
-            foreach($comList as $key => $val){
-                if($val["id"] == $commentId){
-                    $k = $key + 1;
-                }
-            }
-            $current_page = ceil($k / $perPage);
-        }
-
-
-        $comList = Comment::join("users","users.id","=","comments.user_id")
-            ->select("comments.*","users.username","users.logo")->where("article_id",$articleId)->orderBy("id","asc")->get()->toArray();
-
-        $item = array_slice($comList, ($current_page-1)*$perPage, $perPage); //注释1
-        $total = count($comList);
-        $currentPage = "";
-        $paginator = new LengthAwarePaginator($item, $total, $perPage, $currentPage, [
-            'path' => Paginator::resolveCurrentPath(),  //注释2
-            'pageName' => 'page',
-        ]);
-        $paginator->setCurrPage($current_page);
-        $articleComment = $paginator->toArray()['data'];
-        foreach($articleComment as $key => $val){
-            $totalPage = 0;
-            self::encrytById($articleComment[$key],"user_id",1);
-            self::encrytById($articleComment[$key],"article_id",1);
-            $articleComment[$key]["article_comment"] = htmlspecialchars_decode($val["article_comment"]);
-            $articleComment[$key]["answer"] = $comType == 1 ? Answer::getAnswer($val["id"],$totalPage) : Answer::getAnswer_2($val["id"],$a,$b,$c);
-            $articleComment[$key]["totalPage"] = $comType == 1 ? $totalPage : $b;
-            $articleComment[$key]["nowPage"] = $comType == 1 ? 1 : $c;
-        }
-        $arrFind = array($commentId,$comType);
-        //print_r($articleComment);die;
-        return view("Home.detail",compact("userInfo","articleInfo","articleComment","actionLi","foucsInfo","articleMastInfo","paginator","arrFind"));
-    }
-
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -399,15 +295,6 @@ class ArticleController extends BaseController
     }
 
     /**
-     * 更新文章评论次数
-     * @param $articleId  文章ID
-     * @param int $add  ture 加 false 减
-     */
-    public static function updateArticleComment($articleId,$add = 1){
-        return $add ? Article::where("id","{$articleId}")->increment("comments",1) : Article::where("id","{$articleId}")->decrement("comments",1);
-    }
-
-    /**
      * 更新文章点赞次数
      * @param $articleId  文章ID
      * @param int $add  ture 加 false 减
@@ -453,18 +340,6 @@ class ArticleController extends BaseController
             return Article::where(["article_status"=>0,"is_show"=>1])->where("created_at",">=","DATE_ADD(LEFT(NOW(),10),INTERVAL -10 DAY)")->orderBy("id","desc")->paginate(4);
         }
         return Article::whereIn("category",$articleType)->where(["article_status"=>0,"is_show"=>1])->where("created_at",">=","DATE_ADD(LEFT(NOW(),10),INTERVAL -10 DAY)")->orderBy("id","desc")->paginate(4);
-    }
-
-    /**
-     * 判读文章是否被改用户评论
-     * @param $articleId 文章ID
-     * @param string $userId 用户ID
-     * @return int
-     */
-    public static function judgeComment($articleId,$userId = ""){
-        $userId = $userId ? $userId : Auth::user()->id;
-        $commentInfo = Comment::where(["article_id"=>$articleId,"user_id"=>$userId])->get();
-        return count($commentInfo);
     }
 
     public function test(Request $request){

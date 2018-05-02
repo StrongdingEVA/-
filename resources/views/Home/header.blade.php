@@ -61,7 +61,7 @@
                     loadMessage();
                     //var t =setInterval(loadMessage,15000);
                     function loadMessage(){
-                        $.phpajax("/getusermessage","get","",true,"json",function(data){
+                        $.phpajax("/getmsg","get","",true,"json",function(data){
                             data = eval("("+ data +")");
                             if(data.status == -1){
                                 clearInterval(t);
@@ -71,7 +71,7 @@
                                 htmlStr = "";
                                 htmlStr += '<ul class="dropdown-menu" style="top:42px;left:160px">';
                                 for(var i = 0 in data.ext){
-                                    htmlStr += '<li><a href="/article_detail/'+ data.ext[i].etc +'/'+ data.ext[i].comval +'/'+ data.ext[i].comtype +'/' + data.ext[i].id + '">'+ data.ext[i].message_disc +'</a></li>';
+                                    htmlStr += '<li><a href="/article_detail/'+ data.ext[i].article_id +'/'+ data.ext[i].comment_id +'/'+ data.ext[i].ans_id +'/' + data.ext[i].comtype + '">'+ data.ext[i].message_disc +'</a></li>';
                                 }
                                 htmlStr += '</ul>';
                                 $(".dropdown-menu").remove();

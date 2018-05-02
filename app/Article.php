@@ -129,4 +129,15 @@ class Article extends Model
         }
         return $result;
     }
+
+    /**
+     * 更新文章评论次数
+     * @param $articleId  文章ID
+     * @param int $add  ture 加 false 减
+     */
+    public static function updateArticleComment($articleId,$add = 1){
+        return $add ? self::where("id","{$articleId}")->increment("comments",1) : self::where("id","{$articleId}")->decrement("comments",1);
+    }
+
+
 }

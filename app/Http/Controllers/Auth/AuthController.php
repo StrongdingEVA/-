@@ -150,31 +150,43 @@ class AuthController extends Controller
      * @param Request $request
      */
     public function userComment(Request $request){
-        $articleId = isset($_POST["articleid"]) ? htmlspecialchars($_POST["articleid"]) : Redirect::back()->withInput($_POST);
+        $articleId = htmlspecialchars($request->get("articleid",''));
+        if(!$articleId){
+            Redirect::back()->withInput($_POST);
+        }
         $articleIdEn = $articleId;
-        $content = \Helpers::clearStr($_POST["editorValue"]);
-        $articleComment = isset($_POST["editorValue"]) ? $content : Redirect::back()->withInput($_POST);
+        $content = \Helpers::clearStr($request->get("editorValue"));
+        $articleComment = $content ? $content : Redirect::back()->withInput($_POST);
         ArticleController::encrytDeById($articleId);
         $userInfo = Auth::user();
         $arrTemp = array("article_id"=>$articleId,"user_id"=>$userInfo->id,"article_comment"=>$articleComment);
-        $articleInfo = Article::where("id",$articleId)->with("getUsername")->first();
+        $articleInfo = Article::getArticleInfo($articleId);
         //开启事务
         DB::beginTransaction();
         //插入评论信息
         $res_1 = Comment::create($arrTemp);
         //更新文章评论次数
-        $res_2 = ArticleController::updateArticleComment($articleId,1);
-        if($userInfo->id != $articleInfo->getUsername->id){ //判断是否是本人评论自己的文章，如果不是则插入信息表
-            $res_5 = UserMessageController::create(1,"{$userInfo->username}评论了你的文章~!",$res_1->id,$articleInfo->getUsername->id,$articleId,1);
+        $res_2 = Article::updateArticleComment($articleId,1);
+        if($userInfo->id != $articleInfo['get_username']['id']){ //判断是否是本人评论自己的文章，如果不是则插入信息表
+            $param = array(
+                'user_id' => $userInfo->id,
+                'type' => 1,
+                'disc' => "{$userInfo->username}评论了你的文章~",
+                'article_id' => $articleId,
+                'com_type' => 1,
+                'ans_id' => 0,
+                'comment_id' => $res_1->id,
+            );
+            $res_5 = UserMessageController::create($param);
         }else{
             $res_5 = true;
         }
 
-        if(ArticleController::judgeComment($articleId)){
+        if(Comment::judgeComment($articleId)){
             $res_3 = true;
             $res_4 = true;
         }else{
-            $res_3 = self::pointManage(1,true);
+            $res_3 = User::pointManage(1,true);
             $res_4 = PointrecordController::insertRecord(1);
         }
 
@@ -193,13 +205,14 @@ class AuthController extends Controller
      */
     public function userAnswer(Request $request){
         $userInfo = Auth::user();
-        $articleIdOld = $articleId = $request->get("article_id");
+        $articleId = $request->get("article_id");
+        $commentId = $request->get("comment_id");
         $toUserId = $request->get("to_user_id");
         $content = \Helpers::clearStr($request->get("article_comment"));
         $answerArr = array(
             "article_comment" => $content,
             "article_id" => $articleId,
-            "comment_id" => $request->get("comment_id"),
+            "comment_id" => $commentId,
             "to_user_id" => $toUserId,
             "from_user_id" => $userInfo->id,
         );
@@ -207,7 +220,16 @@ class AuthController extends Controller
         DB::beginTransaction();
         $res_1 = Answer::create($answerArr);
         if(Auth::user()->id != $toUserId){
-            $res_2 = UserMessageController::create(1,"{$userInfo->username}回复了你的评论~!",$res_1->id,$toUserId,$articleId,2);
+            $param = array(
+                'user_id' => $userInfo->id,
+                'type' => 1,
+                'disc' => "{$userInfo->username}回复了你的评论~",
+                'article_id' => $articleId,
+                'com_type' => 2,
+                'ans_id' => $res_1->id,
+                'comment_id' => $commentId,
+            );
+            $res_2 = UserMessageController::create($param);
         }else{
             $res_2 = true;
         }
@@ -372,44 +394,6 @@ class AuthController extends Controller
         return 1;
     }
 
-
-    /**
-     * @param $type 1评论积分  2 发布文章积分 3 登录积分 4 点赞积分 5 取消点赞扣除积分 6 删除评论扣除积分
-     * @param bool|true $addOrSub true 增加 false 减少
-     * @param string $userId
-     * @return mixed
-     */
-    public static function pointManage($type,$addOrSub = true,$userId = ""){
-        $userInfo = Auth::user();
-        $userId = $userId ? $userId : $userInfo->id;
-        $levelPoint = $userInfo->level_point;
-        $point = 0;
-        switch($type){
-            case 1 :
-                $point = COMMENT_POINT;
-                break;
-            case 2 :
-                $point = POST_ARTICLE_POINT;
-                break;
-            case 3 :
-                $point = LOGIN_POINT;
-                break;
-            case 4 :
-                $point = COLLECTION_POINT;
-                break;
-            case 5 :
-                $point = COLLECTION_CANCEL_POINT;
-                break;
-            case 6 :
-                $point = COMMENT_CANCEL_POINT;
-                break;
-            default :
-                $point = 0;
-                break;
-        }
-        $levelPoint = $addOrSub ? $levelPoint + $point : $levelPoint - $point;
-        return User::where("id",$userId)->update(["level_point"=>$levelPoint]);
-    }
 
     /**
      * 检验用户

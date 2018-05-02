@@ -27,14 +27,12 @@ class Answer extends Model
      *  根据评论获取回复
      */
     public static function getAnswer($commentId,&$totalPage){
-        $answer = Answer::where("comment_id",$commentId)->with("get_from_user_info")->with("get_to_user_info")->paginate(self::$pageSize);
+        $answer = Answer::where("comment_id",$commentId)->with("get_from_user_info")->with("get_to_user_info")->get()->toArray();
 
         foreach($answer as $k => $v){
             $answer[$k]["article_comment"] = htmlspecialchars_decode($v["article_comment"]);
-//            $answer[$k]->get_from_user_info->id = \Helpers::encrytById($answer[$k]->get_from_user_info);
-//            $answer[$k]->get_to_user_info->id = \Helpers::encrytById($answer[$k]->get_to_user_info);
         }
-        $total = Answer::where("comment_id",$commentId)->get()->toArray();
+        $total = Answer::select('id')->where("comment_id",$commentId)->get()->toArray();
         $totalPage = ceil(count($total) / self::$pageSize);
         return $answer;
     }

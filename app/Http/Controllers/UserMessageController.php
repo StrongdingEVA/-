@@ -18,22 +18,24 @@ class UserMessageController extends Controller
      * @comType 1 评论 2 回复
      * @return \Illuminate\Http\Response
      */
-    public static function create($type,$disc,$comVal,$userId = "",$etc = 0,$comType = 1){
-        $arr = array("user_id"=>$userId,"type"=>$type,"message_disc"=>$disc,"etc"=>$etc,"comtype"=>$comType,"comval"=>$comVal);
-        //print_r($arr);die;
-        //插入一个信息，提醒用户，有消息
-        $userId = $userId ? $userId : Auth::user()->id;
-        if(!$type || !$disc){return false;}
+    public static function create($param){
+        $userId = $param['user_id'] ? $param['user_id'] : Auth::user()->id;
+        $arr = array(
+            "user_id" => $userId,
+            "type" => $param['type'],
+            "message_disc" => $param['disc'],
+            "article_id" => $param['article_id'],
+            "comtype" => $param['com_type'],
+            "ans_id" => $param['ans_id'],
+            "comment_id" => $param['comment_id']
+        );
         return UserMessage::create($arr);
     }
 
     public function getUserMessage(){
         $userId = @Auth::user()->id;
         if(!$userId){\Helpers::echoJsonAjax(-1,"未登录");}
-        $info = UserMessage::where(["user_id"=>$userId,"status"=>0])->orderBy("created_at","desc")->get();
-        foreach($info as $k => $v){
-            ArticleController::encrytById($info[$k],"etc");
-        }
+        $info = UserMessage::getMsgByUid($userId);
         \Helpers::echoJsonAjax(1,"获取信息成功",$info,1);
     }
 }

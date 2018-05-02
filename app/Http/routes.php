@@ -32,7 +32,7 @@ Route::group(['middleware' => 'auth'],function(){
 Route::get('/blog/{key?}/{order?}/{search?}', 'ArticleController@index');
 Route::get('', 'ArticleController@index');
 
-Route::get('article_detail/{id}/{comval?}/{comtype?}/{c_id?}', 'ArticleController@detail');//文章详情
+Route::get('article_detail/{id}/{cid?}/{aid?}/{type?}', 'ArticleController@detail');//文章详情
 
 Route::post('auth/colletion', 'Auth\AuthController@userColletion'); //文章点赞
 
@@ -51,7 +51,7 @@ Route::get('getFilePics', 'ArticleController@getFilePics'); //关注用户
 
 Route::get('getbaidunews', 'ArticleController@getBaiDuNews');//获取分类文章
 
-Route::get('getusermessage', 'UserMessageController@getUserMessage');//获取分类文章
+Route::get('getmsg', 'UserMessageController@getUserMessage');//获取分类文章
 
 Route::get('getansajax/{id}/{page}', 'AnswerController@getAnswerAjax');//获取评论的回复Ajax
 

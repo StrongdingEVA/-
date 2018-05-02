@@ -99,4 +99,49 @@ class User extends Model implements AuthenticatableContract,
         $result = self::whereIn("id",$param)->get()->toArray();
         return is_string($userIdArr) ? current($result) : $result;
     }
+
+    /**
+     * @param $type 1评论积分  2 发布文章积分 3 登录积分 4 点赞积分 5 取消点赞扣除积分 6 删除评论扣除积分
+     * @param bool|true $addOrSub true 增加 false 减少
+     * @param string $userId
+     * @return mixed
+     */
+    public static function pointManage($type,$addOrSub = true,$userId = ""){
+        $userInfo = Auth::user();
+        $userId = $userId ? $userId : $userInfo->id;
+        $levelPoint = $userInfo->level_point;
+        $point = 0;
+        switch($type){
+            case 1 :
+                $point = COMMENT_POINT;
+                break;
+            case 2 :
+                $point = POST_ARTICLE_POINT;
+                break;
+            case 3 :
+                $point = LOGIN_POINT;
+                break;
+            case 4 :
+                $point = COLLECTION_POINT;
+                break;
+            case 5 :
+                $point = COLLECTION_CANCEL_POINT;
+                break;
+            case 6 :
+                $point = COMMENT_CANCEL_POINT;
+                break;
+            default :
+                $point = 0;
+                break;
+        }
+        $levelPoint = $addOrSub ? $levelPoint + $point : $levelPoint - $point;
+        return self::saveInfo(array('id' => $userId),array("level_point"=>$levelPoint));
+    }
+
+    public static function saveInfo($where = array(),$param = array()){
+        if(!$where || !$param){
+            return false;
+        }
+        self::where($where)->update($param);
+    }
 }

@@ -151,7 +151,7 @@
 									<div class="response-item child" id="a-{{$va['id']}}">
 										<div class="response-item-head">
 											<a href="javascript:void(0)">
-												<img class="media-object" src="{{$va['logo']}}" alt="">
+												<img class="media-object" src="{{$va['get_from_user_info']['logo']}}" alt="">
 											</a>
 										</div>
 										<div class="response-item-info">
@@ -190,7 +190,9 @@
 							@endforeach
 						</div>
 						<div class="page-class">
-							{!! $paginator->render() !!}
+							@if($paginator)
+								{!! $paginator->render() !!}
+							@endif
 						</div>
 
 						<div class="coment-form">
