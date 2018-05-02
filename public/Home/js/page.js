@@ -74,69 +74,39 @@ function a(e){
     pa = $(e).parents('.page');
     $.phpajax(url,"get","",true,"json",function(data){
         data = eval("(" + data + ")");
-        console.log(data);
         if(data.status != 0){
-            alert("读取消息出错");return;
+            layer.msg("读取消息出错");return;
         }
         message = data.ext.answer;
         str = "";
         for(var i = 0; i<message.length;i++){
             fromUser = message[i].get_from_user_info;
             toUser = message[i].get_to_user_info;
-            str += '<div class="media response-info">';
-            str += '<div class="media-left response-text-left" id="a-'+ message[i].comment_id +'">';
-            str += '<a href="#" style="width:30px">';
-            str += '<img class="media-object" src="'+ fromUser.logo +'" alt=""/>';
+            str += '<div class="response-item child">';
+            str += '<div class="response-item-head">';
+            str += '<a href="javascript:void(0)">';
+            str += '<img class="media-object" src="'+ fromUser.logo +'" alt="">';
             str += '</a>';
             str += '</div>';
-            str += '<div class="media-body response-text-right">';
-            str += '<a href="">'+ fromUser.username +'</a>';
-            toUser.username ? str += '回复 <a href="">'+ toUser.username +'</a>' : "";
-            str += ': <p></p>';
-            str += '<span style="text-indent:20px">'+ message[i].article_comment +'</span>';
-            str += '<ul>';
-            str += '<li>';
-            str += message[i].created_at ? message[i].created_at : "";
-            str += '</li>';
-            str += '<li><a class="createedui" articleId="'+ message[i].article_id +'" commentId="'+ message[i].comment_id +'" this-user="'+ fromUser.id +'" href="javascript:void(0);">回复</a></li>';
-            str += '</ul>';
+            str += '<div class="response-item-info">';
+            str += '<div class="info-username">';
+            str += '<a href="javascript:void(0)">'+ fromUser.username + '</a>';
+            if(toUser.username){
+                str += ' 回复 <a href="javascript:void(0)">'+ toUser.username + '</a>';
+            }
+
             str += '</div>';
-            str += '<div class="clearfix"> </div>';
+            str += '<div class="info-username">';
+            str += '<span>'+ message[i].article_comment +'</span>';
+            str += '</div>';
+            str += '<div class="info-username last">';
+            str += '<span class="time">'+ message[i].created_at +'</span>';
+            str += '<span class="comment createedui" articleId="'+ message[i].article_id +'" commentId="'+ message[i].comment_id +'" this-user="'+  fromUser.id+'" this-username="'+ fromUser.username +'" that-username="'+ fromUser.username +'"><i class="reply"></i>回复</span>';
+            str += '</div>';
+            str += '</div>';
             str += '</div>';
         }
-        type == 2 ? $(ans).find(".media").remove() : "";
         type == 2 ? $(ans).prepend(str) : $(pa).before(str).empty();
-
-        var idRember_2 = new Array();
-        $(".createedui").click(function(){
-            id = $(this).attr("commentId");
-            thisClass = $("#"+id).attr("class");
-            thisUser = $(this).attr("this-user");
-            if(thisClass == "edui-default"){
-                UE.getEditor(id).setShow();
-                //$("#answerBtnDiv").show();
-            }else{
-                docuHeight = (parseInt($(window).height()) - 400) / 2;
-                docuWidth = parseInt($(this).offset().left) - 500;
-                $("#"+id).parent().css({"top":docuHeight+"px","left":docuWidth+"px"}).show();
-                var ue = UE.getEditor(id);
-                idRember_2.push(id);
-            }
-            $("#createedui"+id).attr("commentId",id).attr("toUserId",thisUser);
-            $("#btndiv"+id).show();
-        });
-
-        $(document).bind("click",function(e){
-            classNameClicker = $(e.target).attr("class") === undefined ? "" : $(e.target).attr("class");
-            if(classNameClicker.indexOf("edui") > -1){
-                return;
-            }else{
-                for(var i in idRember_2){
-                    UE.getEditor(idRember_2[i]).setHide()
-                    $("#btndiv"+idRember_2[i]).hide();
-                }
-            }
-        });
     })
 
     $("#" + eleName).empty();

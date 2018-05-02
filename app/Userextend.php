@@ -35,8 +35,8 @@ class Userextend extends Model
      * 获取用户最近收藏的文章
      */
     public static function getUserFrequency($userId = ""){
-        $userEx = $userId ? Userextend::where("user_id",$userId)->first() : Userextend::where("user_id",Auth::user()->id)->first();
-        return $userEx->article_collection ? json_decode($userEx->article_collection) : array();
+        $userEx = $userId ? self::getUserExtendById($userId) : self::getUserExtendById(Auth::user()->id);
+        return $userEx['article_collection'] ? json_decode($userEx['article_collection']) : array();
     }
 
     /**
@@ -52,6 +52,10 @@ class Userextend extends Model
             ->select('*')
             ->first()
             ->toArray();
+    }
+
+    public static function updateById($userId,$param){
+        return self::where("user_id",$userId)->update($param);
     }
 
     /**

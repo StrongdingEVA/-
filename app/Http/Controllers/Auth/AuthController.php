@@ -191,17 +191,15 @@ class AuthController extends Controller
      * @param Redirect $request
      * @return Redirect
      */
-    public function userAnswer(Redirect $request){
+    public function userAnswer(Request $request){
         $userInfo = Auth::user();
-        $articleIdOld = $articleId = $_POST["article_id"];
-        $toUserId = $_POST["to_user_id"];
-        ArticleController::encrytDeById($articleId);
-        ArticleController::encrytDeById($toUserId);
-        $content = \Helpers::clearStr($_POST["article_comment"]);
+        $articleIdOld = $articleId = $request->get("article_id");
+        $toUserId = $request->get("to_user_id");
+        $content = \Helpers::clearStr($request->get("article_comment"));
         $answerArr = array(
             "article_comment" => $content,
             "article_id" => $articleId,
-            "comment_id" => $_POST["comment_id"],
+            "comment_id" => $request->get("comment_id"),
             "to_user_id" => $toUserId,
             "from_user_id" => $userInfo->id,
         );
@@ -216,30 +214,20 @@ class AuthController extends Controller
         if(!$res_1 || !$res_2){
             DB::rollback();
             Redirect::back();
+            \Helpers::echoJsonAjax(-1,'评论失败');
         }
         DB::commit();
-        return redirect("article_detail/{$articleIdOld}");
+        \Helpers::echoJsonAjax(0,'评论成功');
     }
 
     /**
      * 更新用户收藏
      */
     public function userColletion(Request $request){
-        $arrOut = array("status" => -1,"message" => "收藏失败",);
-        $articleId = isset($_POST["article_id"]) ? $_POST["article_id"] : 0;
+        $articleId = $request->get('article_id',0);
         if(!$articleId){
-            echo json_encode($arrOut);return;
+            \Helpers::echoJsonAjax(-1,"收藏失败");
         }
-
-        if(!self::checkUser()){
-            $arrOut["status"] = -2;
-            $arrOut["message"] = "未登录";
-            $uri = substr($_SERVER["HTTP_REFERER"],strpos($_SERVER["HTTP_REFERER"],"article_detail") -1);
-            $request->session()->put('redUrlAuto', $uri);
-            echo json_encode($arrOut);return;
-        }
-
-        ArticleController::encrytDeById($articleId);
 
         DB::beginTransaction();
         if(UserextendController::updateCollect($articleId) == -1){
@@ -254,26 +242,17 @@ class AuthController extends Controller
             \Helpers::echoJsonAjax(-1,"收藏失败");
         }
         DB::commit();
-        $articleInfo = Article::where("id","{$articleId}")->first();
-        \Helpers::echoJsonAjax(1,"收藏成功",$articleInfo->collections,0);
+        $articleInfo = Article::getArticleInfo($articleId);
+        \Helpers::echoJsonAjax(1,"收藏成功",$articleInfo['collections'],0);
     }
 
     /**
      * 用户取消收藏
      */
     public function userColletionCancel(Request $request){
-        $arrOut = array("status" => -1,"message" => "取消收藏失败",);
-        $articleId = isset($_POST["article_id"]) ? $_POST["article_id"] : 0;
+        $articleId = $request->get('article_id',0);
         if(!$articleId){
-            echo json_encode($arrOut);return;
-        }
-
-        if(!self::checkUser()){
-            $arrOut["status"] = -2;
-            $arrOut["message"] = "未登录";
-            $uri = substr($_SERVER["HTTP_REFERER"],strpos($_SERVER["HTTP_REFERER"],"article_detail") -1);
-            $request->session()->put('redUrlAuto', $uri);
-            echo json_encode($arrOut);return;
+            \Helpers::echoJsonAjax(-1,"取消收藏失败");
         }
 
         ArticleController::encrytDeById($articleId);
@@ -290,8 +269,8 @@ class AuthController extends Controller
             \Helpers::echoJsonAjax(1,"取消收藏失败");
         }
         DB::commit();
-        $articleInfo = Article::where("id","{$articleId}")->first();
-        \Helpers::echoJsonAjax(1,"取消收藏成功",$articleInfo->collections,0);
+        $articleInfo = Article::getArticleInfo($articleId);
+        \Helpers::echoJsonAjax(1,"取消收藏成功",$articleInfo['collections'],0);
     }
 
     /**
@@ -302,7 +281,7 @@ class AuthController extends Controller
         if(!$userId){
             \Helpers::echoJsonAjax(-1,"参数错误");
         }
-        ArticleController::encrytDeById($userId);
+
         $userIdNow = @Auth::user()->id;
         if(!$userIdNow){
             $uri = substr($_SERVER["HTTP_REFERER"],strpos($_SERVER["HTTP_REFERER"],"article_detail") -1);
@@ -313,27 +292,27 @@ class AuthController extends Controller
         if($userIdNow == $userId){
             \Helpers::echoJsonAjax(-1,"你TM关注自己干吊...");
         }
-        if(UserextendController::isFoucs($userId)){
+        if(Userextend::isFoucs($userId)){
             \Helpers::echoJsonAjax(-1,"你已经关注过他了...");
         }
-        $userInfoTo = User::where("id",$userId)->first();
+        $userInfoTo = User::getUserInfo($userId);
         if(empty($userInfoTo)){
             \Helpers::echoJsonAjax(-1,"不存在该用户...");
         }
-        $userFoucs = UserextendController::useFoucs();
+        $userFoucs = Userextend::useFoucs();
         $userFoucs[] = $userId;
 
         DB::beginTransaction();
-        $res_1 = Userextend::where("user_id",$userIdNow)->update(["user_foucs"=>json_encode($userFoucs)]);
-        $userFoucsTo = UserextendController::useFans($userId);//被关注用户的粉丝信息
+        $res_1 = Userextend::updateById($userIdNow,["user_foucs"=>json_encode($userFoucs)]);
+        $userFoucsTo = Userextend::useFans($userId);//被关注用户的粉丝信息
         $userFoucsTo[] = $userIdNow;
-        $res_2 = Userextend::where("user_id",$userId)->update(["user_fans"=>json_encode($userFoucsTo)]);
+        $res_2 = Userextend::updateById($userId,["user_fans"=>json_encode($userFoucsTo)]);
         if(!$res_1 || !$res_2){
             DB::rollback();
             \Helpers::echoJsonAjax(1,"关注失败~!");
         }
         DB::commit();
-        \Helpers::echoJsonAjax(1,"关注成功~!",UserextendController::isFoucsBouth($userId),0);
+        \Helpers::echoJsonAjax(1,"关注成功~!",Userextend::isFoucsBouth($userId),0);
     }
 
     /**
@@ -376,7 +355,7 @@ class AuthController extends Controller
 
 
     public function sendMsgGet(Request $request,$uid){
-        $userInfo = User::where("id",$uid)->first();
+        $userInfo = User::getUserInfo($uid);
         return view('Home.sendmsg',compact("userInfo"));
     }
 
@@ -437,5 +416,13 @@ class AuthController extends Controller
      */
     public static function checkUser(){
         return empty(Auth::user()) ? 0 : 1;
+    }
+
+    public function checkIsLogin(){
+        if(empty(Auth::user())){
+            \Helpers::echoJsonAjax(-1,'请先登录');
+        }else{
+            \Helpers::echoJsonAjax(0);
+        }
     }
 }

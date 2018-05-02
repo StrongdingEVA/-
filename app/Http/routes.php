@@ -32,9 +32,7 @@ Route::group(['middleware' => 'auth'],function(){
 Route::get('/blog/{key?}/{order?}/{search?}', 'ArticleController@index');
 Route::get('', 'ArticleController@index');
 
-Route::get('article_detail/{id}', 'ArticleController@detail');//文章详情
-
-Route::get('article_detail_2/{id}/{comval}/{comtype}/{c_id}', 'ArticleController@detail_2');//文章详情2
+Route::get('article_detail/{id}/{comval?}/{comtype?}/{c_id?}', 'ArticleController@detail');//文章详情
 
 Route::post('auth/colletion', 'Auth\AuthController@userColletion'); //文章点赞
 
@@ -70,6 +68,11 @@ Route::post('auth/login', 'Auth\AuthController@postLogin');//登录动作
 Route::get('auth/register', ',Auth\AuthController@getRegister');//注册页面
 Route::post('auth/register', 'Auth\AuthController@postRegister');//注册动作
 Route::post('auth/getchecknum', 'Auth\AuthController@getCheckNumber');//验证码
+
+
+Route::post('checkIsLogin', 'Auth\AuthController@checkIsLogin');//验证登录状态
+
+
 
 
 

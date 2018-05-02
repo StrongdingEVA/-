@@ -27,6 +27,7 @@ class Article extends Model
         return $this->belongsTo('App\Category',"category","id");
     }
 
+
     /**
      * @param $articleId
      * @return bool
@@ -36,7 +37,9 @@ class Article extends Model
         if(!$articleId){
             return false;
         }
-        return self::where("id",$articleId)->with("getUsername")->first()->toArray();
+        $info = self::where("id",$articleId)->with("getUsername")->first()->toArray();
+        $info['article_source_pic'] = explode(',',$info['article_source_pic']);
+        return $info;
     }
 
     /**
@@ -111,6 +114,19 @@ class Article extends Model
         ]);
         $paginatorAns->setCurrPage($page);
         $result = $paginatorAns->toArray()['data'];
+        return $result;
+    }
+
+    /**
+     * 获取首页滚动文章
+     * 首先获取推荐文章 如果没有推荐文章则选择今日浏览次数最多的文章
+     */
+    public static function getSrollArticle(){
+        $result = self::select('article_title','id')->where("is_recommend",1)->orderBy("views","desc")->paginate(5)->toArray()['data'];
+
+        if(!count($result)){
+            $result = Article::select('article_title','id')->where(['is_show' => 1])->orderBy("views","desc")->paginate(5)->toArray()['data'];
+        }
         return $result;
     }
 }

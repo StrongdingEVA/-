@@ -171,8 +171,8 @@ class Helpers{
         return $Isp;
     }
 
-    public static function echoJsonAjax($status,$message,$ext = "",$type = 0){ //$type 0 字符串  1 数组
-        $arrOut = empty($ext) ? array("status" => $status,"message" => $message) : array("status" => $status,"message" => $message,"ext"=> is_array($type) ? json_encode($ext) : $ext);
+    public static function echoJsonAjax($status,$message = '',$ext = "",$type = 0){ //$type 0 字符串  1 数组
+        $arrOut = array("status" => $status,"message" => $message,"ext"=> is_array($type) ? json_encode($ext) : $ext);
         echo json_encode($arrOut);exit();
     }
 
@@ -314,9 +314,9 @@ class Helpers{
      */
     public static function uploadimg($alowArr,$dir,$type = 1){
         if(empty($alowArr)){
-            $alowArr = array("jpg","jpeg","png","gif","bmp","mp4","avi","mkv","flv");
+            $alowArr = array("jpg","jpeg","png","gif");
         }
-        $type == 1 ? $size = 10000 : $size = 200000;
+        $type == 1 ? $size = 5000 : $size = 200000;
         $uploadClass = new \Upload($size,$alowArr);
         $uploadClass->setDir($dir);
         $result = $uploadClass->execute();

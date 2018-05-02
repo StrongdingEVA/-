@@ -35,7 +35,7 @@ class ArticleController extends BaseController
         //$this->dispatch((new CollectionBook(17))->delay(2));
         //查询分类
         $fields = array('*');
-        $where = array('is_recommend' => 1);
+        $where = array('is_show' => 1);
         $whereIn = array();
         $articleList = array();
         if($key == 'friend'){
@@ -61,10 +61,10 @@ class ArticleController extends BaseController
                 $order = array('comments','desc');
                 break;
             case 'new':
-                $order = array('create_at','desc');
+                $order = array('created_at','desc');
                 break;
             case 'old':
-                $order = array('create_at','asc');
+                $order = array('created_at','asc');
                 break;
             default:
                 $order = array('comments','desc');
@@ -79,9 +79,11 @@ class ArticleController extends BaseController
     /**
      * 文章详情
      */
-    public function detail(Request $request,$articleId){
+    public function detail(Request $request,$articleId,$commentId = '',$comType = '',$c_id = ''){
         //更新文章浏览次数
         User::updateViews($articleId);
+
+//        $c_id && UserMessage::where("id","{$c_id}")->update(["status"=>1]);
 
         $articleInfo = Article::getArticleInfo($articleId);
 
@@ -97,25 +99,18 @@ class ArticleController extends BaseController
         $foucsInfo["bouth"] = Userextend::isFoucsBouth($articleInfo['user_id']); //是否互相关注
         \Helpers::htmlspecdecode($articleInfo,"article_content");
 
-        $perPage = 15;
+        $perPage = 1;
         if ($request->has('page')) {
             $current_page = $request->input('page');
             $current_page = $current_page <= 0 ? 1 :$current_page;
         } else {
             $current_page = 1;
         }
-        $comList = Comment::join("users","users.id","=","comments.user_id")
-            ->select("comments.*","users.username","users.logo")->where("article_id",$articleId)->orderBy("id","asc")->get()->toArray();
 
-        $item = array_slice($comList, ($current_page-1)*$perPage, $perPage); //注释1
-        $total = count($comList);
-        $currentPage = "";
-        $paginator = new LengthAwarePaginator($item, $total, $perPage, $currentPage, [
-            'path' => Paginator::resolveCurrentPath(),  //注释2
-            'pageName' => 'page',
-        ]);
+        $result = Comment::getCommentList(3,array('comments.article_id' => $articleId),array('comments.id','asc'),$current_page,$perPage);
 
-        $articleComment = $paginator->toArray()['data'];
+        $articleComment = $result['data'];
+        $paginator = $result['paginator'];
         foreach($articleComment as $key => $val){
             $totalPage = 0;
             self::encrytById($articleComment[$key],"user_id",1);
@@ -128,7 +123,8 @@ class ArticleController extends BaseController
             $articleComment[$key]["nowPage"] = 1;
         }
 
-        return view("Home.detail",compact("userInfo","articleInfo","articleComment","actionLi","foucsInfo","articleMastInfo","paginator"));
+        $arrFind = array($commentId,$comType);
+        return view("Home.detail",compact("userInfo","articleInfo","articleComment","actionLi","foucsInfo","articleMastInfo","paginator","arrFind"));
     }
 
     /**
@@ -236,10 +232,7 @@ class ArticleController extends BaseController
      * 发布文章的页面
      */
     public function article(){
-        $userInfo = Auth::user();
-        $cateInfo = Category::where("level",0)->orderBy("id","asc")->get();
-        $actionLi = 90;
-        return view("Home.article",compact("userInfo","cateInfo","actionLi"));
+        return view("Home.article");
     }
 
     /**
@@ -280,6 +273,11 @@ class ArticleController extends BaseController
      */
     public function createArticle(Request $request){
         $articleInfo = $request->all();
+        if(mb_strlen($articleInfo['editorValue']) > 10){
+            $articleInfo['article_disc'] = substr(strip_tags($articleInfo['editorValue']),0,10) . '...';
+        }else{
+            $articleInfo['article_disc'] = $articleInfo['editorValue'];
+        }
         $validator = $this->validator($articleInfo);
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -290,16 +288,14 @@ class ArticleController extends BaseController
         $articleInfo["article_content"] = $articleInfo["editorValue"];
         $articleInfo["user_id"] = Auth::user()->id;
         $article = new Article();
-        $article->category = $articleInfo["category"];
         $article->article_title = htmlspecialchars($articleInfo["article_title"]);
         $article->article_disc = $articleInfo["article_disc"];
         $article->article_content = htmlspecialchars($articleInfo["article_content"]);
-//        $article->article_thumb = \Helpers::getThumbFromVideo($articleInfo["article_video"]);
-        $article->article_thumb = $articleInfo["article_thumb"];
+        $article->article_thumb = substr($articleInfo["article_thumb"],0,strpos($articleInfo["article_thumb"],','));
         $article->article_source_pic = str_replace("thumb","source",$articleInfo["article_thumb"]);
-        $article->article_video = $articleInfo["article_video"];
         $article->user_id = $articleInfo["user_id"];
-        $article->is_recommend = isset($articleInfo["is_show"]) ? 1 : 0;
+        $article->is_recommend = 0;
+        $article->is_show = isset($articleInfo["is_show"]) ? 1 : 0;
 
         DB::beginTransaction();
         $res_1 = $article->save($articleInfo);
@@ -339,7 +335,6 @@ class ArticleController extends BaseController
     }
 
 
-
     /**
      * Get a validator for an incoming registration request.
      *
@@ -350,29 +345,9 @@ class ArticleController extends BaseController
     {
         return Validator::make($data, [
             'article_title' => 'required|max:255',
-            'category' => 'required',
-//            'article_thumb' => 'required|max:255',
             'article_disc' => 'required|max:255',
             'editorValue' => 'required',
         ]);
-    }
-
-    /**
-     * 获取首页滚动文章
-     * 首先获取推荐文章 如果没有推荐文章则选择今日浏览次数最多的文章
-     */
-    public function getSrollArticle(){
-        $result = Article::join("users","users.id","=","articles.user_id")
-            ->select("articles.*","users.username")->where("articles.is_recommend",1)->get()->toArray();
-
-        if(!count($result)){
-            $result = Article::join("users","users.id","=","articles.user_id")
-                ->select("articles.*","users.username")->orderBy("articles.views","asc")->paginate(5);
-        }
-        foreach($result as $k => $v){
-            $this->encrytById($result[$k]);
-        }
-        return $result;
     }
 
     /**

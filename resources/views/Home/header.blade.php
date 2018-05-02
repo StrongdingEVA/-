@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mr.Tin Blog</title>
+    <title>懒人日志</title>
     <link href="/Home/css/bootstrap.css" rel='stylesheet' type='text/css' />
     <script type="text/javascript" src="/Home/js/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="/Home/js/blog.js"></script>
@@ -9,15 +9,12 @@
     <link rel="stylesheet" href="/Home/css/my.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html; charset=utf-8" />
-    <meta name="keywords" content="Express News Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+    <meta name="keywords" content="懒人,日志,个人博客" />
     <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
     <script type="text/javascript" src="/Home/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/Home/js/layer.js"></script>
     <script type="text/javascript" src="/Home/js/responsiveslides.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="/Home/js/myjs.js"></script>
-    <script>
-
-    </script>
     <script type="text/javascript" src="/Home/js/move-top.js"></script>
     <script type="text/javascript" src="/Home/js/easing.js"></script>
     <!--/script-->
@@ -29,6 +26,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             });
         });
     </script>
+    <style>
+        .top-menu .dropdown-menu li{
+            display: block;
+            margin-right:0px;
+        }
+    </style>
 </head>
 <body>
 <!-- header-section-starts-here -->
@@ -40,10 +43,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <ul>
                     <li><a href="/">{{$userInfo ? $userInfo['username'] : '游客'}}&nbsp;&nbsp;<img src="{{$userInfo ? $userInfo['logo'] : '/upload/userimg/default.png'}}" height="28px" alt="{{$userInfo ? $userInfo['username'] : '游客'}}"></a></li>
                     <li><a href="/publish">发布文章</a></li>
-                    <li><a href="contact.html">我的收藏</a></li>
-                    <li><a href="about.html">关于我们</a></li>
                     <li>
-                        <a href="#" id="dropdown-toggle" class="dropdown-toggle" data-toggle="dropdown">
+                        <a href="#" id="dropdown-toggle" class="dropdown-toggle"  data-toggle="dropdown">
                             我的消息
                         </a>
                     </li>
@@ -57,27 +58,27 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             </div>
             <script>
                 $(function(){
-//                    loadMessage();
-//                    var t =setInterval(loadMessage,15000);
-//                    function loadMessage(){
-//                        $.phpajax("/getusermessage","get","",true,"json",function(data){
-//                            data = eval("("+ data +")");
-//                            if(data.status == -1){
-//                                clearInterval(t);
-//                                return;
-//                            }
-//                            if(data.ext.length){
-//                                htmlStr = "";
-//                                htmlStr += '<ul class="dropdown-menu">';
-//                                for(var i = 0 in data.ext){
-//                                    htmlStr += '<li><a href="/article_detail_2/'+ data.ext[i].etc +'/'+ data.ext[i].comval +'/'+ data.ext[i].comtype +'/' + data.ext[i].id + '">'+ data.ext[i].message_disc +'</a></li>';
-//                                }
-//                                htmlStr += '</ul>';
-//                                $(".dropdown-menu").remove();
-//                                $("#dropdown-toggle").html('我的消息<b class="caret"></b>').after(htmlStr);
-//                            }
-//                        });
-//                    }
+                    loadMessage();
+                    //var t =setInterval(loadMessage,15000);
+                    function loadMessage(){
+                        $.phpajax("/getusermessage","get","",true,"json",function(data){
+                            data = eval("("+ data +")");
+                            if(data.status == -1){
+                                clearInterval(t);
+                                return;
+                            }
+                            if(data.ext.length){
+                                htmlStr = "";
+                                htmlStr += '<ul class="dropdown-menu" style="top:42px;left:160px">';
+                                for(var i = 0 in data.ext){
+                                    htmlStr += '<li><a href="/article_detail/'+ data.ext[i].etc +'/'+ data.ext[i].comval +'/'+ data.ext[i].comtype +'/' + data.ext[i].id + '">'+ data.ext[i].message_disc +'</a></li>';
+                                }
+                                htmlStr += '</ul>';
+                                $(".dropdown-menu").remove();
+                                $("#dropdown-toggle").html('我的消息<b class="caret"></b>').after(htmlStr);
+                            }
+                        });
+                    }
                 })
             </script>
             <div class="clearfix"></div>
@@ -106,6 +107,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <li class="active"><a href="/blog/world">世界</a></li>
                             <li class="active"><a href="/blog/friend">好友</a></li>
                             <li class="active"><a href="/blog/own">我的</a></li>
+                            <li class="active"><a href="/blog/own">收藏</a></li>
                             <li class="active"><a href="/picturewall/old">热图</a></li>
                             <div class="clearfix"></div>
                         </ul>
@@ -145,8 +147,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <h2>最新动态</h2>
         </div>
         <div class="marquee">
-            <div class="marquee1"><a class="breaking" href="single.html">>>The standard chunk of Lorem Ipsum used since the 1500s is reproduced..</a></div>
-            <div class="marquee2"><a class="breaking" href="single.html">>>At vero eos et accusamus et iusto qui blanditiis praesentium voluptatum deleniti atque..</a></div>
+            @foreach($scrollArticle as $item)
+            <div class="marquee1">
+                <a class="breaking" href="/article_detail/{{$item['id']}}">>>{{$item['article_title']}}</a></div>
+            @endforeach
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>

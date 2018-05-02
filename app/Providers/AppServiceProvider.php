@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Article;
 use App\Category;
 use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +20,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $key = 'world';
         $search = '';
+        $scrollArticle = Article::getSrollArticle();
         view()->share('search',$search);
         view()->share('key',$key);
+        view()->share('scrollArticle',$scrollArticle);
     }
 
     /**

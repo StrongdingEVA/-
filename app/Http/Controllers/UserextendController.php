@@ -22,26 +22,25 @@ class UserextendController extends Controller
     public static function updateCollect($articleId,$type = 1){
         $userInfo = Auth::user();
         $userId = $userInfo->id;
-        if(!Userextend::where("user_id",$userId)->first()){
+        if(!Userextend::getUserExtendById($userId)){
             $arrTemp = array("user_id"=>$userId,"article_collection"=>"","	article_views"=>"");
             Userextend::create($arrTemp);
         }
 
-        $extendInfo = Userextend::where("user_id",$userId)->first();
-        $articleCollection = $extendInfo->article_collection ? json_decode($extendInfo->article_collection,1) : array();
+        $extendInfo = Userextend::getUserExtendById($userId);
+        $articleCollection = $extendInfo['article_collection'] ? json_decode($extendInfo['article_collection'],1) : array();
         if($type == 1){
             if(in_array($articleId,$articleCollection)){
                 return -1;
             }
-//          $collectArr = $articleCollection ? json_decode($articleCollection) : array();
             $articleCollection[] = $articleId;
-            return Userextend::where("user_id",$userId)->update(["article_collection" => json_encode($articleCollection)]);
+            return Userextend::updateById($userId,["article_collection" => json_encode($articleCollection)]);
         }else{
             if(!in_array($articleId,$articleCollection)){
                 return -1;
             }
             unset($articleCollection[array_search($articleId,$articleCollection)]);
-            return Userextend::where("user_id",$userId)->update(["article_collection" => json_encode($articleCollection)]);
+            return Userextend::updateById($userId,["article_collection" => json_encode($articleCollection)]);
         }
 
     }
