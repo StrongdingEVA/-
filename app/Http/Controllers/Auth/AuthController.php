@@ -10,6 +10,7 @@ use App\Http\Controllers\PointrecordController;
 use App\Http\Controllers\SendrecordController;
 use App\Http\Controllers\UserextendController;
 use App\Http\Controllers\UserMessageController;
+use App\Pointrecord;
 use App\User;
 use App\Http\Requests;
 use App\Userextend;
@@ -100,7 +101,7 @@ class AuthController extends Controller
         if($updateAt != $dateNow){
             DB::table("users")->where('id', $userInfo["id"])
                 ->update(['level_point' => $levelPoint + 10]);
-            self::pointManage(3,true);
+            User::pointManage(3,true);
             PointrecordController::insertRecord(3);
         }
         DB::table("users")->where('id', $userInfo["id"])
@@ -257,7 +258,7 @@ class AuthController extends Controller
         }
         $res_1 = ArticleController::updateArticleClont($articleId);
         $res_2 = ArticleController::updateArticleCollertor($articleId,1);
-        $res_3 = self::pointManage(4,true);
+        $res_3 = User::pointManage(4,true);
         $res_4 = PointrecordController::insertRecord(4);
         if(!$res_1 || !$res_2 || !$res_3 || !$res_4){
             DB:rollBack();
@@ -284,7 +285,7 @@ class AuthController extends Controller
         DB::beginTransaction();
         $res_1 = ArticleController::updateArticleClont($articleId,0);
         $res_2 = ArticleController::updateArticleCollertor($articleId,0);
-        $res_3 = self::pointManage(5,false);
+        $res_3 = User::pointManage(5,false);
         $res_4 = PointrecordController::insertRecord(5);
         if(!$res_1 || !$res_2 || !$res_3 || !$res_4){
             DB::rollback();
