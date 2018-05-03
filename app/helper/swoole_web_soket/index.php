@@ -15,6 +15,7 @@ Autoload::run($rootPath);
 class WebsocketTest {
     public $server;
     public $connecter = '';
+    public $rooms = [];
     public function __construct() {
         $this->server = new swoole_websocket_server("0.0.0.0", 11223);
 
@@ -69,7 +70,7 @@ class WebsocketTest {
 //            }
 
             $manage = new $realyAct();
-            $manage->run($server,$param);
+            $manage->run($this,$server,$param);
 //            if($data['act'] == 'send_file'){//调用task
 //                $server->task(array('fd' => $frame->fd,'data' => 'this is file'));
 //            }
@@ -91,6 +92,22 @@ class WebsocketTest {
         $this->server->start();
     }
 
+    /**
+     * 新增个房间
+     * @param $roome
+     * @return bool
+     */
+    public function addRoom($roome){
+        if(!$roome){
+            return false;
+        }
+        if(isset($this->rooms[$roome->id])){
+            return false;
+        }
+        $this->rooms[$roome->id] = $roome;
+        return true;
+    }
+
     public function getRoute(){
         return array(
             'send_t_u' => '\manage\Msg',
@@ -98,30 +115,30 @@ class WebsocketTest {
     }
 }
 
-$param = array(
-    'room_name' => '测试房间名',
-    'room_belong' => 10095,
-    'uinfo' => array(
-        'user_id' => 10095,
-        'username' => 'mrtin',
-        'logo' => '/Uploads/2018-04-05/212121.png',
-        'gental' => 1,
-        'server' => 'server',
-        'fd' => '1',
-    ),
-);
-
-$uinfo = array(
-    'user_id' => 10096,
-    'username' => 'mrtin',
-    'logo' => '/Uploads/2018-04-05/6565656.png',
-    'gental' => 1,
-    'server' => 'server',
-    'fd' => '2',
-);
-$room = new Room($param);
-var_dump($room);
-$res = $room->addLink($uinfo);
-var_dump($res);
-var_dump($room);
-//$obj = new WebsocketTest();
+//$param = array(
+//    'room_name' => '测试房间名',
+//    'room_belong' => 10095,
+//    'uinfo' => array(
+//        'user_id' => 10095,
+//        'username' => 'mrtin',
+//        'logo' => '/Uploads/2018-04-05/212121.png',
+//        'gental' => 1,
+//        'server' => 'server',
+//        'fd' => '1',
+//    ),
+//);
+//
+//$uinfo = array(
+//    'user_id' => 10096,
+//    'username' => 'mrtin',
+//    'logo' => '/Uploads/2018-04-05/6565656.png',
+//    'gental' => 1,
+//    'server' => 'server',
+//    'fd' => '2',
+//);
+//$room = new Room($param);
+//var_dump($room);
+//$res = $room->addLink($uinfo);
+//var_dump($res);
+//var_dump($room);
+$obj = new WebsocketTest();
