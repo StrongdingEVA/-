@@ -6,6 +6,7 @@
  * Time: 10:43
  */
 use manage\Msg;
+use manage\Room;
 error_reporting(E_ALL);
 $rootPath = __DIR__;
 require 'autoload/autoload.php';
@@ -97,5 +98,18 @@ class WebsocketTest {
     }
 }
 
-$obj = new WebsocketTest();
-$obj->test();
+$param = array(
+    'room_name' => '测试房间名',
+    'room_belong' => 10095,
+    'uinfo' => array(
+        'user_id' => 10095,
+        'username' => 'mrtin',
+        'logo' => '/Uploads/2018-04-05/212121.png',
+        'gental' => 1,
+        'server' => 'server',
+        'fd' => '1',
+    ),
+);
+$room = new Room();
+var_dump($room);
+//$obj = new WebsocketTest();
