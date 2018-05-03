@@ -77,7 +77,7 @@ class Room{
             return Response::resMsg('该用户已经在此房间了');
         }
 
-        $this->room_connecter[][$param['user_id']] = $param;
+        $this->room_connecter[$param['user_id']] = $param;
         return Response::resMsg('成功',0);
     }
 

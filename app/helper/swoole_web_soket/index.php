@@ -110,6 +110,18 @@ $param = array(
         'fd' => '1',
     ),
 );
+
+$uinfo = array(
+    'user_id' => 10096,
+    'username' => 'mrtin',
+    'logo' => '/Uploads/2018-04-05/6565656.png',
+    'gental' => 1,
+    'server' => 'server',
+    'fd' => '2',
+);
 $room = new Room($param);
+var_dump($room);
+$res = $room->addLink($uinfo);
+var_dump($res);
 var_dump($room);
 //$obj = new WebsocketTest();
