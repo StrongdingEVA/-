@@ -7,6 +7,7 @@
  */
 use manage\Msg;
 use manage\Room;
+use manage\RedisManage;
 error_reporting(E_ALL);
 $rootPath = __DIR__;
 require 'autoload/autoload.php';
@@ -115,6 +116,8 @@ class WebsocketTest {
     }
 }
 
+$red = new RedisManage();
+$red->addTask(1,'------------test');
 //$param = array(
 //    'room_name' => '测试房间名',
 //    'room_belong' => 10095,
@@ -141,4 +144,4 @@ class WebsocketTest {
 //$res = $room->addLink($uinfo);
 //var_dump($res);
 //var_dump($room);
-$obj = new WebsocketTest();
+//$obj = new WebsocketTest();
