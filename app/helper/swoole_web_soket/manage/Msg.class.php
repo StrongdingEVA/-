@@ -44,8 +44,9 @@ class Msg{
                 'fd' => '1',
             ),
         );
-        $room = new Room($param);
-        $that->addRoom($room);
-        $server->push($data['fd'], $that);
+        var_dump($that);
+//        $room = new Room($param);
+//        $that->addRoom($room);
+//        $server->push($data['fd'], $that);
     }
 }
