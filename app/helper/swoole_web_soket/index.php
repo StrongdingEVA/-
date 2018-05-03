@@ -110,6 +110,6 @@ $param = array(
         'fd' => '1',
     ),
 );
-$room = new Room();
+$room = new Room($param);
 var_dump($room);
 //$obj = new WebsocketTest();
