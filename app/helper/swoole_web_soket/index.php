@@ -117,6 +117,7 @@ class WebsocketTest {
 }
 
 $red = new RedisManage();
+var_dump($red);
 $red->addTask(1,'------------test');
 //$param = array(
 //    'room_name' => '测试房间名',
