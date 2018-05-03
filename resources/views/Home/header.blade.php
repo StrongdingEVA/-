@@ -59,7 +59,7 @@
             <script>
                 $(function(){
                     loadMessage();
-                    //var t =setInterval(loadMessage,15000);
+                    var t =setInterval(loadMessage,15000);
                     function loadMessage(){
                         $.phpajax("/getmsg","get","",true,"json",function(data){
                             data = eval("("+ data +")");

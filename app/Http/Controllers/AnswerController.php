@@ -26,15 +26,8 @@ class AnswerController extends Controller
         return $answer;
     }
 
-    public function getAnswerAjax(Request $request,$id,$page){
-        if ($page) {
-            $current_page = $page;
-            $current_page = $current_page <= 0 ? 1 :$current_page;
-        } else {
-            $current_page = 1;
-        }
-        $total = $totalPage = $currentPage = 0;
-        $answer = Answer::getAnswer_2($id,$total,$totalPage,$currentPage,$current_page,1);
-        \Helpers::echoJsonAjax(0,"获取回复成功",array("total"=>$total,"totalPage"=>$totalPage,"currentPage"=>$currentPage,"answer"=>$answer),1);
+    public function getAnswerAjax(Request $request,$id,$page,$oft = 5){
+        $ansList = Answer::getAnswerByComment($id,0,$page,$oft);
+        \Helpers::echoJsonAjax(0,"获取回复成功",array("answer"=>$ansList['data']),1);
     }
 }

@@ -87,7 +87,7 @@
                     <div class="col-sm-10" style="padding-left: 0px">
                         <div class="checkbox">
                             <label>
-                                <input name="is_show" type="checkbox" @if ( old('is_show') == "on" ) checked @endif checked>私密
+                                <input name="is_show" type="checkbox" @if ( old('is_show') == "on" ) checked @endif checked>向世界公布
                             </label>
                         </div>
                     </div>

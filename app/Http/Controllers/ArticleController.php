@@ -8,6 +8,7 @@ use App\Comment;
 use App\Http\Controllers\Auth\AuthController;
 use App\User;
 use App\Userextend;
+use App\UserMessage;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -76,7 +77,7 @@ class ArticleController extends BaseController
         //更新文章浏览次数
         User::updateViews($id);
 
-//        $c_id && UserMessage::where("id","{$c_id}")->update(["status"=>1]);
+        $cid && UserMessage::updateById($cid,["status"=>1]);
 
         $articleInfo = Article::getArticleInfo($id);
 
@@ -92,7 +93,7 @@ class ArticleController extends BaseController
         $foucsInfo["bouth"] = Userextend::isFoucsBouth($articleInfo['user_id']); //是否互相关注
         \Helpers::htmlspecdecode($articleInfo,"article_content");
 
-        $perPage = 1;
+        $perPage = 10;
         if ($request->has('page')) {
             $current_page = $request->input('page');
             $current_page = $current_page <= 0 ? 1 :$current_page;
@@ -101,18 +102,21 @@ class ArticleController extends BaseController
         }
 
         $result = Comment::getCommentList($cid,$id,array('comments.article_id' => $id),array('comments.id','asc'),$current_page,$perPage);
-        //print_r($result);exit;
+
         $articleComment = $result['data'];
         $paginator = $result['paginator'];
         foreach($articleComment as $key => $val){
-            $totalPage = 0;
             self::encrytById($articleComment[$key],"user_id",1);
             self::encrytById($articleComment[$key],"article_id",1);
             $articleComment[$key]["article_comment"] = htmlspecialchars_decode($val["article_comment"]);
-            $articleComment[$key]["answer"] = Answer::getAnswer($val["id"],$totalPage);
-            $articleComment[$key]["subAns"] = $totalPage - 5 > 0 ? $totalPage - 5 : 0;
-            $articleComment[$key]["totalPage"] = $totalPage;
-            $articleComment[$key]["nowPage"] = 1;
+            $ansList = $cid == $val['id'] ? Answer::getAnswerByComment($val["id"],$aid,1,5) : Answer::getAnswerByComment($val["id"],0,1,5);
+            foreach($ansList['data'] as $k => $v){
+                $ansList['data'][$k]["article_comment"] = htmlspecialchars_decode($v["article_comment"]);
+            }
+            $articleComment[$key]["answer"] = $ansList['data'];
+            $articleComment[$key]["subAns"] = $ansList['sub'];
+            $articleComment[$key]["totalPage"] = $ansList['totalPage'];
+            $articleComment[$key]["nowPage"] = $ansList['nowPage'];
         }
         if($type == 2){//回复
             $arrFind = array($aid,$type);

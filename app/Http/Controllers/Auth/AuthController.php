@@ -170,7 +170,8 @@ class AuthController extends Controller
         $res_2 = Article::updateArticleComment($articleId,1);
         if($userInfo->id != $articleInfo['get_username']['id']){ //判断是否是本人评论自己的文章，如果不是则插入信息表
             $param = array(
-                'user_id' => $userInfo->id,
+                'from_id' => $userInfo->id,
+                'to_id' => $articleInfo['get_username']['id'],
                 'type' => 1,
                 'disc' => "{$userInfo->username}评论了你的文章~",
                 'article_id' => $articleId,
@@ -222,7 +223,8 @@ class AuthController extends Controller
         $res_1 = Answer::create($answerArr);
         if(Auth::user()->id != $toUserId){
             $param = array(
-                'user_id' => $userInfo->id,
+                'from_id' => $userInfo->id,
+                'to_id' => $toUserId,
                 'type' => 1,
                 'disc' => "{$userInfo->username}回复了你的评论~",
                 'article_id' => $articleId,
@@ -244,17 +246,17 @@ class AuthController extends Controller
     }
 
     /**
-     * 更新用户收藏
+     * 更新用户点赞
      */
     public function userColletion(Request $request){
         $articleId = $request->get('article_id',0);
         if(!$articleId){
-            \Helpers::echoJsonAjax(-1,"收藏失败");
+            \Helpers::echoJsonAjax(-1,"点赞失败");
         }
 
         DB::beginTransaction();
         if(UserextendController::updateCollect($articleId) == -1){
-            \Helpers::echoJsonAjax(-1,"已经收藏过了");
+            \Helpers::echoJsonAjax(-1,"已经点赞过了");
         }
         $res_1 = ArticleController::updateArticleClont($articleId);
         $res_2 = ArticleController::updateArticleCollertor($articleId,1);
@@ -262,25 +264,25 @@ class AuthController extends Controller
         $res_4 = PointrecordController::insertRecord(4);
         if(!$res_1 || !$res_2 || !$res_3 || !$res_4){
             DB::rollBack();
-            \Helpers::echoJsonAjax(-1,"收藏失败");
+            \Helpers::echoJsonAjax(-1,"点赞失败");
         }
         DB::commit();
         $articleInfo = Article::getArticleInfo($articleId);
-        \Helpers::echoJsonAjax(1,"收藏成功",$articleInfo['collections'],0);
+        \Helpers::echoJsonAjax(1,"点赞成功",$articleInfo['collections'],0);
     }
 
     /**
-     * 用户取消收藏
+     * 用户取消点赞
      */
     public function userColletionCancel(Request $request){
         $articleId = $request->get('article_id',0);
         if(!$articleId){
-            \Helpers::echoJsonAjax(-1,"取消收藏失败");
+            \Helpers::echoJsonAjax(-1,"取消点赞失败");
         }
 
         ArticleController::encrytDeById($articleId);
         if(UserextendController::updateCollect($articleId,0) == -1){
-            \Helpers::echoJsonAjax(-1,"还未收藏，不能取消收藏");
+            \Helpers::echoJsonAjax(-1,"还未点赞，不能取消点赞");
         }
         DB::beginTransaction();
         $res_1 = ArticleController::updateArticleClont($articleId,0);
@@ -289,11 +291,11 @@ class AuthController extends Controller
         $res_4 = PointrecordController::insertRecord(5);
         if(!$res_1 || !$res_2 || !$res_3 || !$res_4){
             DB::rollback();
-            \Helpers::echoJsonAjax(1,"取消收藏失败");
+            \Helpers::echoJsonAjax(1,"取消点赞失败");
         }
         DB::commit();
         $articleInfo = Article::getArticleInfo($articleId);
-        \Helpers::echoJsonAjax(1,"取消收藏成功",$articleInfo['collections'],0);
+        \Helpers::echoJsonAjax(1,"取消点赞成功",$articleInfo['collections'],0);
     }
 
     /**
@@ -354,20 +356,20 @@ class AuthController extends Controller
             $arrOut = array("status"=>-2,"message"=>"请先登录...");
             echo json_encode($arrOut);return;
         }
-        if(!UserextendController::isFoucs($userId)){
+        if(!Userextend::isFoucs($userId)){
             \Helpers::echoJsonAjax(-1,"你并没有关注他，取消个毛...");
         }
         $userInfoTo = User::where("id",$userId)->first();
         if(empty($userInfoTo)){
             \Helpers::echoJsonAjax(-1,"不存在该用户...");
         }
-        $userFoucs = UserextendController::useFoucs();
+        $userFoucs = Userextend::useFoucs();
         unset($userFoucs[array_search($userId,$userFoucs)]);
         DB::beginTransaction();
-        $res_1 = Userextend::where("user_id",$userIdNow)->update(["user_foucs"=>json_encode($userFoucs)]);
-        $userFoucsTo = UserextendController::useFans($userId);//被关注用户的粉丝信息
+        $res_1 = Userextend::updateById($userIdNow,["user_foucs"=>json_encode($userFoucs)]);
+        $userFoucsTo = Userextend::useFans($userId);//被关注用户的粉丝信息
         unset($userFoucsTo[array_search($userIdNow,$userFoucsTo)]);
-        $res_2 = Userextend::where("user_id",$userId)->update(["user_fans"=>json_encode($userFoucsTo)]);
+        $res_2 = Userextend::updateById($userId,["user_fans"=>json_encode($userFoucsTo)]);
         if(!$res_1 || !$res_2){
             DB::rollback();
             \Helpers::echoJsonAjax(-1,"取消关注失败~!");

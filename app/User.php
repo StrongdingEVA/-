@@ -142,6 +142,6 @@ class User extends Model implements AuthenticatableContract,
         if(!$where || !$param){
             return false;
         }
-        self::where($where)->update($param);
+        return self::where($where)->update($param);
     }
 }

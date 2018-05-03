@@ -18,8 +18,9 @@ img.thumb {width: 100%;max-width: 100%;height: auto;}
 .user-info-2 a{text-decoration: none;cursor: pointer;display: inline-block; font-size: 14px;}
 .force-overflow .categories li{margin-top: 3px}
 .pagination_s{display: inline-block;padding-left: 0;margin: 20px 0;border-radius: 4px;padding: 0;text-align: right;}
-.pagination_s li{text-align: center;list-style: none}
-.pagination_s a{display: block;min-width:10px;padding-left: 5px;padding-right: 5px;margin: 0px auto;}
+.pagination_s li{text-align: center;list-style: none;float: left}
+.pagination_s a{display: block;min-width:10px;padding-left: 5px;padding-right: 5px;margin: 0px auto;text-decoration: none}
+.pagination_s .active a{color: #cdcdcd;}
 .page{text-align: center}
 .article-thumb{width: 40%;margin: 0px auto}
 .article-thumb img{margin: 15px 0}
@@ -94,3 +95,4 @@ img.thumb {width: 100%;max-width: 100%;height: auto;}
     background-size: 100%;
     vertical-align: middle;
 }
+.popular-post-grid{cursor:pointer;}

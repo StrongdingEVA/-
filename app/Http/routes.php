@@ -18,7 +18,10 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('publish', 'ArticleController@article'); //发布文章的页面
     Route::post('auth/authcomment', 'Auth\AuthController@userComment'); //文章评论
     Route::post('answer', 'Auth\AuthController@userAnswer'); //文章回复
-    Route::get('auth/foucsusercancle/{id}', 'Auth\AuthController@foucsUserCancle'); //关注用户
+
+    Route::get('nofoucs/{id}', 'Auth\AuthController@foucsUserCancle'); //取消关注
+    Route::get('foucs/{id}', 'Auth\AuthController@foucsUser'); //关注用户
+
     Route::get('picturewall', 'PictureWallController@index'); //照片墙
     Route::get('createpicwall', 'PictureWallController@getCreate'); //照片墙发布界面
     Route::post('createpicwall', 'PictureWallController@postCreate'); //照片墙
@@ -27,6 +30,8 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('/sendMsg/{uid}', 'Auth\AuthController@sendMsgGet'); //发送私信
 
 	Route::post('/doSendMsg', 'Auth\AuthController@sendMsgPost'); //发送私信
+
+    Route::post('auth/colletion', 'Auth\AuthController@userColletion'); //文章点赞
 });
 
 Route::get('/blog/{key?}/{order?}/{search?}', 'ArticleController@index');
@@ -34,11 +39,7 @@ Route::get('', 'ArticleController@index');
 
 Route::get('article_detail/{id}/{cid?}/{aid?}/{type?}', 'ArticleController@detail');//文章详情
 
-Route::post('auth/colletion', 'Auth\AuthController@userColletion'); //文章点赞
-
 Route::post('auth/colletioncancel', 'Auth\AuthController@userColletionCancel'); //文章取消点赞
-
-Route::get('auth/foucsuser/{id}', 'Auth\AuthController@foucsUser'); //关注用户
 
 Route::get('getPics', 'PicController@getPics'); //关注用户
 
@@ -53,7 +54,7 @@ Route::get('getbaidunews', 'ArticleController@getBaiDuNews');//获取分类文�
 
 Route::get('getmsg', 'UserMessageController@getUserMessage');//获取分类文章
 
-Route::get('getansajax/{id}/{page}', 'AnswerController@getAnswerAjax');//获取评论的回复Ajax
+Route::get('getansajax/{id}/{page}/{oft?}', 'AnswerController@getAnswerAjax');//获取评论的回复Ajax
 
 Route::get('linshi/', 'ArticleController@linshi');//获取评论的回复Ajax
 

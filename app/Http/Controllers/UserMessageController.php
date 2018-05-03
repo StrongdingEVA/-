@@ -19,9 +19,10 @@ class UserMessageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public static function create($param){
-        $userId = $param['user_id'] ? $param['user_id'] : Auth::user()->id;
+        $userId = $param['from_id'] ? $param['from_id'] : Auth::user()->id;
         $arr = array(
-            "user_id" => $userId,
+            "from_id" => $userId,
+            "to_id" => $param['to_id'],
             "type" => $param['type'],
             "message_disc" => $param['disc'],
             "article_id" => $param['article_id'],
@@ -29,13 +30,14 @@ class UserMessageController extends Controller
             "ans_id" => $param['ans_id'],
             "comment_id" => $param['comment_id']
         );
+
         return UserMessage::create($arr);
     }
 
     public function getUserMessage(){
         $userId = @Auth::user()->id;
         if(!$userId){\Helpers::echoJsonAjax(-1,"未登录");}
-        $info = UserMessage::getMsgByUid($userId);
+        $info = UserMessage::getMsgByToUid($userId);
         \Helpers::echoJsonAjax(1,"获取信息成功",$info,1);
     }
 }

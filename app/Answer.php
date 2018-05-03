@@ -26,15 +26,44 @@ class Answer extends Model
      * @return mixed
      *  根据评论获取回复
      */
-    public static function getAnswer($commentId,&$totalPage){
-        $answer = Answer::where("comment_id",$commentId)->with("get_from_user_info")->with("get_to_user_info")->get()->toArray();
-
-        foreach($answer as $k => $v){
-            $answer[$k]["article_comment"] = htmlspecialchars_decode($v["article_comment"]);
+    public static function getAnswerByComment($commentId,$aid = '',$page = 1,$offset = 0){
+        $res = self::select('id')->where(['comment_id' => $commentId])->get()->toArray();
+        if(!$res){
+            return array('data' => array(),'totalPage' => 0,'sub' => 0,'nowPage' => 1);
         }
-        $total = Answer::select('id')->where("comment_id",$commentId)->get()->toArray();
-        $totalPage = ceil(count($total) / self::$pageSize);
-        return $answer;
+        $pageSize = self::$pageSize;
+        $offset = $offset ? $offset : self::$pageSize;
+        $c = count($res);
+        $totalPage = ceil($c / $pageSize); //总的页数
+
+        if($aid){
+            $page_ = 0;
+            foreach($res as $k => $v){
+                if($v["id"] == $aid){
+                    $page_ = $k + 1;
+                    break;
+                }
+            }
+            $page = ceil($page_ / $pageSize);
+            $item = array_slice($res, 0, $pageSize * $page);
+        }else{
+            $item = array_slice($res, ($page - 1) * $pageSize, $offset);
+        }
+        //判断剩余记录数
+        $sub = $c - count($item);
+
+        $temp = array();
+        foreach($item as $val){
+            $temp[] = $val['id'];
+        }
+        $temp = $temp ? $temp : array(1);
+        $result = self::where("comment_id",$commentId)
+            ->whereIn('id',$temp)
+            ->with("get_from_user_info")
+            ->with("get_to_user_info")
+            ->get()
+            ->toArray();
+        return array('data' => $result,'totalPage' => $totalPage,'sub' => $sub,'nowPage' => $page);
     }
 
     /**

@@ -1,15 +1,17 @@
 function loadpage(cfg) {
     this.cfg = $.extend({
-        nowPage : 1,
-        totalPag : 1,
         sub : 1,
         el: null,
         url: '',
+        model:1,
+        cacheData:new Object(),
+        nowPage : 1,
+        totalPag : 1,
         post_params: {},
         beforeload:function(){},
         callfunc:function(){}
     }, cfg);
-    this.cfg.loading = false;
+    this.cfg.loading = true;
     this.init();
 }
 loadpage.prototype = {
@@ -30,14 +32,16 @@ loadpage.prototype = {
         htmlStr += '<input class="totalPage" value="'+ totalPage +'" type="hidden"/>';
         htmlStr += '<input class="sub" value="'+ sub +'" type="hidden"/>';
         if(sub <= 8){
-            htmlStr += '<li onclick="a(this)" elename="'+ eleName +'" type="1" url="'+ self.cfg.url +'" data="2"><a href="javascript:void(0)">查看剩余'+ sub +'条回复</a></li>';
+            self.cfg.model = 1;
+            htmlStr += '<li class="ansBtns" elename="'+ eleName +'" data="'+ (nowPage + 1) +'" oft="'+ sub +'"><a href="javascript:void(0)">查看剩余'+ sub +'条回复</a></li>';
             htmlStr += '</ul>';
         }else{
-            htmlStr += '<li onclick="a(this)" elename="'+ eleName +'" type="2" url="'+ self.cfg.url +'" data="1"><a href="javascript:void(0)">首页</a></li>';
+            self.cfg.model = 2;
+            htmlStr += '<li class="ansBtns" elename="'+ eleName +'" data="1"><a href="javascript:void(0)">首页</a></li>';
             if(totalPage <= btns){
                 for(var i=1;i<=totalPage;i++){
-                    htmlStr += self.cfg.nowPage != i ? '<li onclick="a(this)" ' : '<li ';
-                    htmlStr += 'elename="'+ eleName +'" type="2" url="'+ self.cfg.url +'" data="'+ i +'">';
+                    htmlStr += parseInt(nowPage) != i ? '<li class="ansBtns" ' : '<li class="active" ';
+                    htmlStr += 'elename="'+ eleName +'" data="'+ i +'">';
                     htmlStr += '<a href="javascript:void(0)">'+ i +'</a></li>';
                 }
             }else{
@@ -51,37 +55,47 @@ loadpage.prototype = {
                 }
 
                 for(var i=star;i<=end;i++){
-                    htmlStr += self.cfg.nowPage != i ? '<li onclick="a(this)" ' : '<li ';
-                    htmlStr += 'elename="'+ eleName +'" type="2" url="'+ self.cfg.url +'" data="'+ i +'">';
+                    htmlStr += parseInt(nowPage) != i ? '<li class="ansBtns" ' : '<li class="active" ';
+                    htmlStr += 'elename="'+ eleName +'" data="'+ i +'">';
                     htmlStr += '<a href="javascript:void(0)">'+ i +'</a></li>';
                 }
             }
-            htmlStr += '<li onclick="a(this)" elename="'+ eleName +'" type="2" url="'+ self.cfg.url +'" data="'+ totalPage +'"><a href="javascript:void(0)">尾页</a></li>';
+            htmlStr += '<li class="ansBtns" elename="'+ eleName +'" data="'+ totalPage +'"><a href="javascript:void(0)">尾页</a></li>';
             htmlStr += '</ul>';
         }
         $("#" + eleName).append(htmlStr);
+        self.btnEvnt();
     },
-}
-
-function a(e){
-    nextPage = $(e).attr("data");
-    eleName = $(e).attr("elename");
-    url = $(e).attr("url");
-    type = parseInt($(e).attr("type"));
-    url = url.substr(0,url.lastIndexOf('/')+1);
-    url += nextPage;
-    ans = $(e).parents(".answ");
-    pa = $(e).parents('.page');
-    $.phpajax(url,"get","",true,"json",function(data){
-        data = eval("(" + data + ")");
-        if(data.status != 0){
-            layer.msg("读取消息出错");return;
-        }
-        message = data.ext.answer;
-        str = "";
+    btnEvnt:function(){
+        var that = this;
+        $(document).on('click','.ansBtns',function(){
+            var e = $(this);
+            var data_ = $(this).attr('data');
+            var oft = $(this).attr('oft') || 5;
+            var url = that.cfg.url + data_ + '/' + oft;
+            if(!that.cfg.cacheData[url]) {
+                $.phpajax(url,"get","",true,"json",function(data){
+                    data = eval("(" + data + ")");
+                    if(data.status != 0){
+                        layer.msg("读取消息出错");return;
+                    }
+                    if(!that.cfg.cacheData[url]){
+                        that.cfg.cacheData[url] = data.ext.answer;
+                    }
+                    var message = data.ext.answer;
+                    that.createHtml(message,e);
+                })
+            }else{
+                var message = that.cfg.cacheData[url]
+                that.createHtml(message,e);
+            }
+        })
+    },
+    createHtml:function(message,e){
+        var str = '';
         for(var i = 0; i<message.length;i++){
-            fromUser = message[i].get_from_user_info;
-            toUser = message[i].get_to_user_info;
+            var fromUser = message[i].get_from_user_info;
+            var toUser = message[i].get_to_user_info;
             str += '<div class="response-item child">';
             str += '<div class="response-item-head">';
             str += '<a href="javascript:void(0)">';
@@ -106,18 +120,16 @@ function a(e){
             str += '</div>';
             str += '</div>';
         }
-        type == 2 ? $(ans).prepend(str) : $(pa).before(str).empty();
-    })
+        var ans = $(e).parents(".answ");
+        var pa = $(e).parents('.page');
 
-    $("#" + eleName).empty();
-    totalP = $(e).siblings(".totalPage").val();
-    s = $(e).siblings(".sub").val();
-    new loadpage({
-        nowPage: nextPage,
-        totalPage:totalP,
-        sub:s,
-        btns:7,
-        el: eleName,
-        url: url
-    })
+        $(e).parents('.pagination_s').find('li').removeClass('active').removeClass('ansBtns').addClass('ansBtns');
+        $(e).removeClass('ansBtns').addClass('active');
+        if(this.cfg.model == 1){
+            $(pa).before(str).empty();
+        }else{
+            $(pa).prevAll('.child').remove();
+            $(pa).before(str);
+        }
+    }
 }

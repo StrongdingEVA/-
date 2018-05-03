@@ -235,15 +235,15 @@
 										@if($foucsInfo["single"])
 											<a href="javascript:void(0)" type="1" class="acolor isFoucs" data="{{$articleInfo['get_username']['id']}}">取消关注</a>
 										@else
-											<a href="javascript:void(0)" type="0" class="acolor-h isFoucs" data="{{$articleInfo['get_username']['id']}}">关注</a>
+											<a href="javascript:void(0)" type="0" class="isFoucs" data="{{$articleInfo['get_username']['id']}}">关注</a>
 										@endif
 									@endif
 								</div>
-								@if($userInfo && $articleInfo['user_id'] != $userInfo['id'])
-									<div class="user-info-2">
-										<a href="/sendMsg/{{$articleInfo['get_username']['id']}}">发送私信</a>
-									</div>
-								@endif
+								{{--@if($userInfo && $articleInfo['user_id'] != $userInfo['id'])--}}
+									{{--<div class="user-info-2">--}}
+										{{--<a href="/sendMsg/{{$articleInfo['get_username']['id']}}">发送私信</a>--}}
+									{{--</div>--}}
+								{{--@endif--}}
 							</div>
 							<div class="categories">
 								<header>
@@ -269,7 +269,7 @@
 												<div class="force-overflow">
 													@foreach($articleMastInfo["articleHistory"] as $item)
 														<div class="popular-post-grids">
-															<div class="popular-post-grid">
+															<div class="popular-post-grid" url-data="/article_detail/{{ $item['id']}}">
 																<div class="post-img">
 																	<a href="/article_detail/{{ $item['id']}}"><img src="{{$item['article_thumb']}}" alt="" /></a>
 																</div>
@@ -306,6 +306,7 @@
 										  <div class="content" id="a2">
 											  <div class="scrollbar" id="style-2">
 												  <div class="force-overflow">
+													  @if($articleMastInfo["fans"])
 													  <ul class="categories">
 														  @foreach($articleMastInfo["fans"] as $val)
 															  <li>
@@ -315,12 +316,12 @@
 																  </a>
 															  </li>
 														  @endforeach
-														  @if(count($articleMastInfo["fans"])==0)
-															  <div class="article" style="text-align: center">
-																  <h4><a href="/articles">并没有粉丝~！</a></h4>
-															  </div>
-														  @endif
 													  </ul>
+														  @else
+														  <div class="article" style="text-align: center">
+															  <h4><a href="/articles">并没有粉丝~！</a></h4>
+														  </div>
+													  @endif
 												  </div>
 											  </div>
 										  </div>
@@ -331,6 +332,7 @@
 										<div class="content" id="a3">
 											<div class="scrollbar" id="style-2">
 												<div class="force-overflow">
+													@if($articleMastInfo["foucs"])
 													<ul class="categories">
 													@foreach($articleMastInfo["foucs"] as $val)
 														<li>
@@ -341,7 +343,7 @@
 														</li>
 													@endforeach
 													</ul>
-													@if(count($articleMastInfo["foucs"])==0)
+														@else
 														<div class="article" style="text-align: center">
 															<h4><a href="/articles">丑逼并没有关注任何人~！</a></h4>
 														</div>
@@ -482,17 +484,21 @@
 			});
 
 			$(".isFoucs").click(function(){
-				userId = $(this).attr("data");
-				type = $(this).attr("type");
-				urlStr = type == 1 ? "/auth/foucsusercancle/"+userId : "/auth/foucsuser/"+userId;
+				var userId = $(this).attr("data");
+				var type = $(this).attr("type");
+				var urlStr = type == 1 ? "/nofoucs/"+userId : "/foucs/"+userId;
 
                 $.checkLogin('/',function(res){
                     if(parseInt(res.status) == 0){
                         $.phpajax(urlStr,"get","",true,"json",function(data){
-                            type = $(".isFoucs").attr("type");
-                            ext = data.ext;
-                            type == 0 ? $(".isFoucs").before('<a id="foucsBouth" href="javascript:void(0)" class="acolor">相互关注</a> ') : $("#foucsBouth").remove();
-                            type == 0 ? $(".isFoucs").attr("type",1).removeClass("acolor-h").addClass("acolor").text("取消关注") : $(".isFoucs").attr("type",0).removeClass("acolor").addClass("acolor-h").text("关注");
+                            var ext = data.ext;
+                            if(type == 0){//关注
+                                ext && $(".isFoucs").before('<a id="foucsBouth" href="javascript:void(0)" class="acolor">相互关注</a> ')
+                                $(".isFoucs").attr("type",1).removeClass("acolor-h").addClass("acolor").text("取消关注");
+							}else{//取消关注
+                                $("#foucsBouth").remove();
+                                $(".isFoucs").attr("type",0).removeClass("acolor").addClass("acolor-h").text("关注");
+							}
                         });
                     }else{
                         layer.msg(res.message);
@@ -558,6 +564,8 @@
                 $(document).scrollTop(tops - 50);
             }
 			@endif
+
+			blog.bindDump('.popular-post-grid')
 		});
 
 		function foucsCallback(data){
