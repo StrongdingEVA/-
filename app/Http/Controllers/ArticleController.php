@@ -27,7 +27,6 @@ class ArticleController extends BaseController
      */
     public function index(Request $request,$key = 'world',$order = 'hot',$search = '')
     {
-        Redis::set('testkye','test value');
         //$this->dispatch((new CollectionBook(17))->delay(2));
         //查询分类
         $fields = array('*');
