@@ -200,7 +200,7 @@ class ArticleController extends BaseController
 
         DB::beginTransaction();
         $res_1 = $article->save($articleInfo);
-        $res_2 = AuthController::pointManage(2);
+        $res_2 = User::pointManage(2);
         $res_3 = PointrecordController::insertRecord(2);
         $res_4 = User::where("id",$articleInfo["user_id"])->increment("post_count",1);
         if(!$res_1 || !$res_2 || !$res_3 || !$res_4){
