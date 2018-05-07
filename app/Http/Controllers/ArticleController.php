@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends BaseController
@@ -26,6 +27,7 @@ class ArticleController extends BaseController
      */
     public function index(Request $request,$key = 'world',$order = 'hot',$search = '')
     {
+        Redis::set('testkye','test value');
         //$this->dispatch((new CollectionBook(17))->delay(2));
         //查询分类
         $fields = array('*');
