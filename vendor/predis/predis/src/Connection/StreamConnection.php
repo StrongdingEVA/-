@@ -125,9 +125,10 @@ class StreamConnection extends AbstractConnection
         $timeout = (isset($parameters->timeout) ? (float) $parameters->timeout : 5.0);
 
         if (!$resource = @stream_socket_client($address, $errno, $errstr, $timeout, $flags)) {
+            dd($resource);
             $this->onConnectionError(trim($errstr), $errno);
         }
-
+        dd($resource);
         if (isset($parameters->read_write_timeout)) {
             $rwtimeout = (float) $parameters->read_write_timeout;
             $rwtimeout = $rwtimeout > 0 ? $rwtimeout : -1;
