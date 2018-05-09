@@ -3,11 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 
 class UserMessage extends Model
 {
     //
-    protected $fillable = ['from_id','to_id', 'type','message_disc','article_id','status','ans_id','comtype','comment_id'];
+    protected $fillable = ['from_id','to_id', 'type','disc','article_id','status','ans_id','com_type','comment_id'];
 
     /**
      * 获取信息
@@ -16,7 +17,12 @@ class UserMessage extends Model
      * @return mixed
      */
     public static function getMsgByToUid($userId,$status = 0){
-        return self::where(["to_id"=>$userId,"status"=>$status])->orderBy("created_at","desc")->get()->toArray();
+        $info = json_decode(Redis::get(USER_MSG . $userId),1);
+        if(!$info){
+            $info = self::where(["to_id"=>$userId,"status"=>$status])->orderBy("created_at","desc")->get()->toArray();
+            Redis::set(USER_MSG . $userId,json_encode($info));
+        }
+        return $info;
     }
 
     /**

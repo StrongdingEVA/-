@@ -6,6 +6,7 @@ use App\Http\Controllers\ArticleController;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 
 class Answer extends Model
 {
@@ -27,7 +28,12 @@ class Answer extends Model
      *  根据评论获取回复
      */
     public static function getAnswerByComment($commentId,$aid = '',$page = 1,$offset = 0){
-        $res = self::select('id')->where(['comment_id' => $commentId])->get()->toArray();
+        $res = json_decode(Redis::get(ANS_KEY . $commentId),1);
+        if(!$res){
+            $res = self::select('id')->where(['comment_id' => $commentId])->get()->toArray();
+            Redis::set(ANS_KEY . $commentId,json_encode($res));
+        }
+
         if(!$res){
             return array('data' => array(),'totalPage' => 0,'sub' => 0,'nowPage' => 1);
         }
@@ -64,59 +70,5 @@ class Answer extends Model
             ->get()
             ->toArray();
         return array('data' => $result,'totalPage' => $totalPage,'sub' => $sub,'nowPage' => $page);
-    }
-
-    /**
-     * @param $commentId
-     * 获取评论的回复s
-     */
-    public static function getAnswer_2($commentId,&$total,&$totalPage,&$currentPage,$current_page = 1,$isAjax = 0){
-        if(!$commentId){
-            return array();
-        }
-        $perPage = self::$pageSize; //每页记录数
-        //判断当前回复在第几页
-        $k = 0;
-        $answer = Answer::where("comment_id",$commentId)->orderBy("id","asc")->with("get_from_user_info")->with("get_to_user_info")->get()->toarray();
-
-        if(count($answer)==0){
-            return false;
-        }
-
-        if(!$isAjax) {
-            foreach ($answer as $key => $val) {
-                if ($val["id"] == $commentId) {
-                    $k = $key + 1;
-                }
-            }
-            $current_page = ceil($k / $perPage);
-        }
-
-        $item = array_slice($answer, ($current_page-1) * $perPage, $perPage); //注释1
-        $total = count($answer);
-        $totalPage = ceil($total / $perPage);
-        $currentPage = "";
-        $paginatorAns = new LengthAwarePaginator($item, $total, $perPage, $currentPage, [
-            'path' => Paginator::resolveCurrentPath(),  //注释2
-            'pageName' => 'page',
-        ]);
-        $paginatorAns->setCurrPage($current_page);
-        $answer = $paginatorAns->toArray()['data'];
-
-        $timeStar = 0;
-        foreach($answer as $k => $v){
-            $answer[$k]["article_comment"] = htmlspecialchars_decode($v["article_comment"]);
-            $timeTemp = strtotime($v["created_at"]);
-            if(($timeTemp - $timeStar) >= 600){
-                $timeStar = $timeTemp - $timeStar;
-            }else{
-                $answer[$k]["created_at"] = null;
-            }
-        }
-
-        $total = $total;
-        $totalPage = $totalPage;
-        $currentPage = $current_page;
-        return $answer;
     }
 }

@@ -4,8 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 
 class Comment extends Model
 {
@@ -13,8 +13,12 @@ class Comment extends Model
     protected $fillable = ['article_id', 'user_id', 'article_comment','answer_count','good_count','bad_count','created_at','updated_at'];
 
     public static function getCommentList($key,$articleId,$where = array(),$order = array(),$page = 1,$pageSize = 10){
-        $res = self::select('id')->where($where);
-        $res = $res->get()->toArray();
+        $res = json_decode(Redis::get(ART_KEY_COM . $articleId),1);
+        if(!$res){
+            $res = self::select('id')->where($where);
+            $res = $res->get()->toArray();
+            Redis::set(ART_KEY_COM . $articleId,json_encode($res));
+        }
         if(!$res){
             return array('paginator' => array(),'data' => array());
         }
@@ -36,13 +40,17 @@ class Comment extends Model
             $temp[] = $val['id'];
         }
         $temp = $temp ? $temp : array(1);
-        $result = self::join("users","users.id","=","comments.user_id")
-            ->select("comments.*","users.username","users.logo")
-            ->where($where)
-            ->whereIn('comments.id',$temp)
-            ->orderBy($order[0],$order[1])
-            ->get()
-            ->toArray();
+        $result = json_decode(Redis::get(ART_KEY_COM_PAGE . implode(',',$temp)),1);
+        if(!$result){
+            $result = self::join("users","users.id","=","comments.user_id")
+                ->select("comments.*","users.username","users.logo")
+                ->where($where)
+                ->whereIn('comments.id',$temp)
+                ->orderBy($order[0],$order[1])
+                ->get()
+                ->toArray();
+            Redis::set(ART_KEY_COM_PAGE . implode(',',$temp),json_encode($result));
+        }
 
         $total = count($res);
         $currentPage = "";

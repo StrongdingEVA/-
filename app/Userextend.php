@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 
 class Userextend extends Model
 {
@@ -48,14 +49,23 @@ class Userextend extends Model
         if(!$userId){
             return array();
         }
-        return self::where('user_id',$userId)
-            ->select('*')
-            ->first()
-            ->toArray();
+        $info = json_decode(Redis::get(USER_EXT . $userId),1);
+        if(!$info){
+            $info = self::where('user_id',$userId)
+                ->select('*')
+                ->first()
+                ->toArray();
+            Redis::set(USER_EXT . $userId,json_encode($info));
+        }
+        return $info;
     }
 
     public static function updateById($userId,$param){
-        return self::where("user_id",$userId)->update($param);
+        $res = self::where("user_id",$userId)->update($param);
+        if($res){
+            Redis::set(USER_EXT . $userId,null);
+        }
+        return $res;
     }
 
     /**

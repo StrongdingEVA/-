@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 
 class Article extends Model
 {
     //
     protected $fillable = ['category', 'article_title', 'article_disc','article_content','article_thumb','user_id','article_status','is_show','views','collections','comments','is_recommend','collector'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      * 关联用户
@@ -37,7 +39,12 @@ class Article extends Model
         if(!$articleId){
             return false;
         }
-        $info = self::where("id",$articleId)->with("getUsername")->first()->toArray();
+        Redis::set(ART_KEY . $articleId,null);
+        $info = json_decode(Redis::get(ART_KEY . $articleId),1);
+        if(!$info){
+            $info = self::where("id",$articleId)->with("getUsername")->first()->toArray();
+            Redis::set(ART_KEY . $articleId,json_encode($info));
+        }
         $info['article_source_pic'] = explode(',',$info['article_source_pic']);
         return $info;
     }
@@ -48,7 +55,12 @@ class Article extends Model
      */
     public static function getArticleToUser($userId = ""){
         $userId = $userId ? $userId : Auth::user()->id;
-        return self::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5)->toArray();
+        $info = json_decode(Redis::get(ART_KEY_UROD . $userId),1);
+        if(!$info){
+            $info = self::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5)->toArray();
+            Redis::set(ART_KEY_UROD . $userId,json_encode($info));
+        }
+        return $info;
     }
 
     /**
@@ -59,11 +71,16 @@ class Article extends Model
     public static function getArticleForHot($pageSize = 4){
         //最近发布 并且评价较多的文章
         $t = time() - 3600 * 24 * 5;
-        return self::where(["article_status"=>0,"is_show"=>1])
-            ->where("created_at",">=",$t)
-            ->orderBy("comments","desc")
-            ->paginate($pageSize)
-            ->toArray()['data'];
+        $info = json_decode(Redis::get(ART_KEY_HOT),1);
+        if(!$info){
+            $info = self::where(["article_status"=>0,"is_show"=>1])
+                ->where("created_at",">=",$t)
+                ->orderBy("comments","desc")
+                ->paginate($pageSize)
+                ->toArray()['data'];
+            Redis::set(ART_KEY_HOT,json_encode($info));
+        }
+        return $info;
     }
 
     /**
@@ -72,7 +89,12 @@ class Article extends Model
      */
     public static function getHistArticle($userId){
         $userId = $userId ? $userId : Auth::user()->id;
-        return self::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5)->toArray()['data'];
+        $info = json_decode(Redis::get(ART_KEY_UROD . $userId),1);
+        if(!$info){
+            $info = self::where(["user_id"=>$userId,"is_show"=>1])->orderBy("id","desc")->paginate(5)->toArray()['data'];
+            Redis::set(ART_KEY_UROD . $userId,json_encode($info));
+        }
+        return $info;
     }
 
     /**
@@ -122,10 +144,14 @@ class Article extends Model
      * 首先获取推荐文章 如果没有推荐文章则选择今日浏览次数最多的文章
      */
     public static function getSrollArticle(){
-        $result = self::select('article_title','id')->where("is_recommend",1)->orderBy("views","desc")->paginate(5)->toArray()['data'];
+        $result = json_decode(Redis::get(ART_KEY_SCL),1);
+        if(!$result){
+            $result = self::select('article_title','id')->where("is_recommend",1)->orderBy("views","desc")->paginate(5)->toArray()['data'];
 
-        if(!count($result)){
-            $result = Article::select('article_title','id')->where(['is_show' => 1])->orderBy("views","desc")->paginate(5)->toArray()['data'];
+            if(!count($result)){
+                $result = Article::select('article_title','id')->where(['is_show' => 1])->orderBy("views","desc")->paginate(5)->toArray()['data'];
+            }
+            Redis::set(ART_KEY_SCL,json_encode($result));
         }
         return $result;
     }
@@ -139,5 +165,11 @@ class Article extends Model
         return $add ? self::where("id","{$articleId}")->increment("comments",1) : self::where("id","{$articleId}")->decrement("comments",1);
     }
 
-
+    public static function updateViews($articleId){
+        $res = self::where("id",$articleId)->increment("views",1);
+        if($res){
+            Redis::set(ART_KEY . $articleId,null);
+        }
+        return $res;
+    }
 }

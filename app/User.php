@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
@@ -65,19 +66,27 @@ class User extends Model implements AuthenticatableContract,
             return true;
         }
         $userId = $userInfo->id;
-        if(!Userextend::where("user_id",$userId)->first()){
+        if(!Userextend::getUserExtendById($userId)){
             $arrTemp = array("user_id"=>$userId,"article_collection"=>"","	article_views"=>"");
             Userextend::create($arrTemp);
         }
 
-        $extendInfo = Userextend::where("user_id",$userId)->first();
-        $articleViews = $extendInfo->article_views ? json_decode($extendInfo->article_views) : array();
+        $extendInfo = Userextend::getUserExtendById($userId);
+        $articleViews = $extendInfo['article_views'] ? json_decode($extendInfo['article_views']) : array();
         if(in_array($articleId,$articleViews)){
             return true;
         }
-        Article::where("id",$articleId)->increment("views",1);
+        DB::beginTransaction();
+        $res1 = Article::updateViews($articleId);
         $articleViews[] = $articleId;
-        return Userextend::where("user_id",$userId)->update(["article_views" => json_encode($articleViews)]);
+        $res2 = Userextend::updateById($userId,array("article_views" => json_encode($articleViews)));
+        if($res1 && $res2){
+            DB::commit();
+            return true;
+        }else{dd($extendInfo);
+            DB::rollback();
+            return false;
+        }
     }
 
     /**

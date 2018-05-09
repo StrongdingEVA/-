@@ -10,7 +10,6 @@ use App\Http\Controllers\PointrecordController;
 use App\Http\Controllers\SendrecordController;
 use App\Http\Controllers\UserextendController;
 use App\Http\Controllers\UserMessageController;
-use App\Pointrecord;
 use App\User;
 use App\Http\Requests;
 use App\Userextend;
@@ -19,11 +18,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
-//use Symfony\Component\HttpFoundation\Request;
-use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Support\Facades\Redis;
 
 class AuthController extends Controller
 {
@@ -197,6 +195,8 @@ class AuthController extends Controller
             return Redirect::back()->withInput(array("error"=>"评论失败","editorValue"=>$_POST["editorValue"]));
         }
         DB::commit();
+        Redis::set(ART_KEY_COM . $articleId,null);
+        Redis::set(USER_MSG . $userInfo->id,null);
         return redirect("/article_detail/{$articleIdEn}");
     }
 
@@ -242,6 +242,8 @@ class AuthController extends Controller
             \Helpers::echoJsonAjax(-1,'评论失败');
         }
         DB::commit();
+        Redis::set(ANS_KEY . $commentId,null);
+        Redis::set(USER_MSG . $userInfo->id,null);
         \Helpers::echoJsonAjax(0,'评论成功');
     }
 

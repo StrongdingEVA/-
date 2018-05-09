@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Answer;
 use App\Article;
 use App\Comment;
-use App\Http\Controllers\Auth\AuthController;
 use App\User;
 use App\Userextend;
 use App\UserMessage;
@@ -14,7 +13,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends BaseController
@@ -192,7 +190,7 @@ class ArticleController extends BaseController
         $article->article_title = htmlspecialchars($articleInfo["article_title"]);
         $article->article_disc = $articleInfo["article_disc"];
         $article->article_content = htmlspecialchars($articleInfo["article_content"]);
-        $article->article_thumb = substr($articleInfo["article_thumb"],0,strpos($articleInfo["article_thumb"],','));
+        $article->article_thumb = $articleInfo["article_thumb"];
         $article->article_source_pic = str_replace("thumb","source",$articleInfo["article_thumb"]);
         $article->user_id = $articleInfo["user_id"];
         $article->is_recommend = 0;
@@ -223,7 +221,7 @@ class ArticleController extends BaseController
         $result = \Helpers::uploadimg("","upload/articleimg",2);//echo json_encode($result);die;
         if($result["status"]==0){
             $imgDst = str_replace("source","thumb",$result["result"]);
-            \Helpers::resizejpg($result["result"],"./".$imgDst,0,200);
+            \Helpers::resizejpg($result["result"],"./".$imgDst,0,500);
 
             $this->arrOut["status"] = 1;
             $this->arrOut["message"] = "上传成功";
