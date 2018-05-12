@@ -85,9 +85,6 @@
         </div>
     </div>
     <div class="header-bottom">
-        <div class="logo text-center">
-            <a href="index.html"><img src="/Home/images/logo.jpg" alt="" /></a>
-        </div>
         <div class="navigation">
             <nav class="navbar navbar-default" role="navigation">
                 <div class="wrap">
@@ -104,11 +101,10 @@
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="/blog/world">世界</a></li>
-                            <li class="active"><a href="/blog/friend">好友</a></li>
-                            <li class="active"><a href="/blog/own">我的</a></li>
-                            <li class="active"><a href="/blog/own">收藏</a></li>
-                            <li class="active"><a href="/picturewall/old">热图</a></li>
+                            <li @if($active == 'world')class="active"@endif><a href="/blog/world">世界</a></li>
+                            <li @if($active == 'friend')class="active"@endif><a href="/blog/friend">好友</a></li>
+                            <li @if($active == 'own')class="active"@endif><a href="/blog/own">我的</a></li>
+                            <li @if($active == 'picwall')class="active"@endif><a href="/picturewall/old">照片墙</a></li>
                             <div class="clearfix"></div>
                         </ul>
                         <div class="search">

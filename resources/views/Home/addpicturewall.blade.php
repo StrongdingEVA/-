@@ -26,17 +26,7 @@
                         </div>
                     @endif
                     <input type="hidden" type="text" name="_token" value="{{ csrf_token() }}">
-                    <h2 class="heading text-center">发布我的热图</h2>
-
-                    <div class="form-group mar-top">
-                        <h4 style="margin: 0px 0px 15px 0px">主题:</h4>
-                        <select class="form-control" name="tehme">
-                            @foreach($cateInfo as $val)
-                                <option value="{{$val->id}}" @if($val->id == old("category")) selected @endif value="">{{$val->category_name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
+                    <h2 class="heading text-center">发布我的照片</h2>
 
                     <div class="form-group mar-top" id="select-file-div" style="position: relative">
                         <div id="queue"></div>
@@ -96,7 +86,7 @@
                     </script>
 
                     <div class="grid_3 grid_5">
-                        <textarea name="disc" id="disc" placeholder="说说你的热图" class="form-control onblur" cols="30" rows="4" required>@if(old("disc")) {{old("disc")}}} @endif</textarea>
+                        <textarea name="disc" id="disc" placeholder="为你的图片陪上点文字吧~" class="form-control onblur" cols="30" rows="4" required>@if(old("disc")) {{old("disc")}}} @endif</textarea>
                     </div>
 
                     <div class="grid_3 grid_5" id="select-file-div" style="text-align: right;margin-right: 20px">

@@ -22,7 +22,18 @@
                     <span>{{$val['get_username']['username']}}</span>
                 </p>
 				<p>{{$val['article_title']}}</p>
-				<p>时间：{{$val['created_at']}}</p>
+				<p>
+					<a class="span_link article-icon" href="javascript:void(0)">
+						<span class="glyphicon glyphicon-comment"></span>{{$val['comments']}}
+					</a>
+					<a class="span_link article-icon" href="javascript:void(0)">
+						<span class="glyphicon glyphicon-eye-open"></span>{{$val['views']}}
+					</a>
+					<a class="span_link article-icon" type="0" href="javascript:void(0)">
+						<span class="glyphicon glyphicon-thumbs-up"></span>{{$val['collections']}}
+					</a>
+				</p>
+				<p class="article-time">{{$val['created_at']}}</p>
 			</article>
 		@endforeach
 	</section>

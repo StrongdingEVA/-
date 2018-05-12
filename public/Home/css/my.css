@@ -30,3 +30,23 @@ img.thumb {width: 100%;max-width: 100%;height: auto;}
     background-color:#337ab7;
     color:#fff;
 }
+.white-panel .article-time{
+    font-size: 10px;
+}
+.white-panel .article-icon span{
+    margin:0 4px 0 10px !important;
+}
+.navbar-collapse .navbar-nav{
+    border-bottom: 8px;
+}
+.navbar-collapse .navbar-nav li{
+    padding-bottom: 5px;
+}
+.navbar-nav .active{
+    border-bottom: 2px solid;
+    border-color: #a1a1a1;
+}
+.navbar-collapse .navbar-nav li:hover{
+    border-bottom: 2px solid;
+    border-color: #a1a1a1;
+}

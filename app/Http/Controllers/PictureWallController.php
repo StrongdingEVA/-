@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\Console\Helper\Helper;
 
 session_start();
-class PictureWallController extends Controller
+class PictureWallController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -30,12 +30,13 @@ class PictureWallController extends Controller
         $hotPicItem = self::isLiked($hotPicItem);
         $total = Hotpic::getTotal();
         $pageCount = ceil($total / $pageSize);
-        return view("Home.picturewall",compact("actionLi","hotPicItem","pageCount","type"));
+        $active = 'picwall';
+        return view("Home.picturewall",compact("actionLi","hotPicItem","pageCount",'active','type'));
     }
 
     public function getCreate(Request $request){
-        $actionLi = 5;
-        return view("Home.addpicturewall",compact("actionLi"));
+        $active = 'picwall';
+        return view("Home.addpicturewall",compact("active"));
     }
 
     public function postCreate(Request $request){
@@ -57,7 +58,7 @@ class PictureWallController extends Controller
         $hotPic->user_id = $picWallInfo["user_id"];
         $hotPic->path = str_replace("thumb","source",$picWallInfo["thumb"]);
         $hotPic->thumb = $picWallInfo["thumb"];
-        $hotPic->tehme = $picWallInfo["tehme"];
+        $hotPic->tehme = 0;
         $hotPic->model = $par["model"];//器材
         $hotPic->make = $par["make"]; //器材品牌
         $hotPic->focallength = $par["focalLength"];//焦距

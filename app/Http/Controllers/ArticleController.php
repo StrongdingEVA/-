@@ -47,7 +47,7 @@ class ArticleController extends BaseController
             }
             $whereIn = array('user_id',[$this->uId]);
         }
-
+        $active = $key;
         $search && $where['article_title'] = trim($search);
         switch ($order){
             case 'hot':
@@ -66,7 +66,7 @@ class ArticleController extends BaseController
 
         $data = Article::getList($fields,$where,$whereIn,$order,1,16);
         $articleList = $data ? $data['data'] : array();
-        return view('Home.index',compact('articleList','key','search'));
+        return view('Home.index',compact('articleList','key','search','active'));
     }
 
     /**
@@ -190,7 +190,7 @@ class ArticleController extends BaseController
         $article->article_title = htmlspecialchars($articleInfo["article_title"]);
         $article->article_disc = $articleInfo["article_disc"];
         $article->article_content = htmlspecialchars($articleInfo["article_content"]);
-        $article->article_thumb = $articleInfo["article_thumb"];
+        $article->article_thumb = substr($articleInfo["article_thumb"],0,strpos($articleInfo["article_thumb"],','));
         $article->article_source_pic = str_replace("thumb","source",$articleInfo["article_thumb"]);
         $article->user_id = $articleInfo["user_id"];
         $article->is_recommend = 0;
