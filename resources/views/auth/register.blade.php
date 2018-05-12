@@ -86,7 +86,7 @@
                                                 <input type="email" id="contact_email_login" name="email" class="form-control" placeholder="邮箱"  required/>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" id="contact_password_login" name="password" class="form-control" placeholder="密码"  required/>
+                                                <input type="password" id="contact_password_login" name="password" class="form-control" placeholder="密码"  required/>
                                             </div>
                                 
                                         </div>
@@ -149,10 +149,10 @@
                                                 <input type="email" id="contact_email" name="email" class="form-control" placeholder="请输入邮箱" @if ( old('email') ) value="{{ old('email') }}" @endif required/>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" id="contact_password" name="password" class="form-control" placeholder="请输入密码" @if ( old('password') ) value="{{ old('password') }}" @endif required/>
+                                                <input type="password" id="contact_password" name="password" class="form-control" placeholder="请输入密码" @if ( old('password') ) value="{{ old('password') }}" @endif required/>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="确认密码" @if ( old('password_confirmation') ) value="{{ old('password_confirmation') }}" @endif required/>
+                                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="确认密码" @if ( old('password_confirmation') ) value="{{ old('password_confirmation') }}" @endif required/>
                                             </div>
                                             <div class="form-group" style="position: relative">
                                                 <input type="text" id="check_number" name="check_number" class="form-control" placeholder="输入验证码"  required/>

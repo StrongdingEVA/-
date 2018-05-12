@@ -12,13 +12,6 @@
                 var tab_name = self[0].tagName;
                 var s_top = $(self).scrollTop();
                 if(tab_name === undefined){ //window
-                    // var d_height = $(document).height();
-                    // var v_height = $(window).height();
-                    // if(d_height - s_top - v_height < 500 && self.status == 0){
-                    //     self.status = 1;
-                    //     opts.callback(self);
-                    // }
-
                     scrollheight = $(window).scrollTop() + $(window).height();
                     height = $(document).height();
                     distence = parseInt(height) - parseInt(scrollheight);

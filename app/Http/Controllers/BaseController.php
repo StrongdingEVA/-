@@ -30,5 +30,6 @@ class BaseController extends Controller{
             $this->uId = $temp['id'];
         }
         view()->share('userInfo',$temp);
+        view()->share('active','world');
     }
 }

@@ -62,7 +62,7 @@
             <a href="/createpicwall">
                 <img src="/Home/images/plus23.png" class="thumb">
                 <p style="text-align: center">
-                    <span>发表热图</span>
+                    <span>发表图片</span>
                 </p>
             </a>
         </article>
@@ -135,7 +135,7 @@
                             $.phpajax(urlStr,"get","",true,"json",function(data){
                                 data = eval("("+ data +")");
                                 if(data.status == -1){
-                                    alert(data.message);return;
+                                    layer.msg(data.message);return;
                                 }else if(data.status == -2){
                                     window.location.href = "/auth/login";
                                 }else{
@@ -151,7 +151,7 @@
                             });
                         })
                     }else{
-                        alert(data.message);
+                        layer.msg(data.message);
                     }
                 })
             }
@@ -173,7 +173,7 @@
             $.phpajax(urlStr,"get","",true,"json",function(data){
                 data = eval("("+ data +")");
                 if(data.status == -1){
-                    alert(data.message);return;
+                    layer.msg(data.message);return;
                 }else if(data.status == -2){
                     window.location.href = "/auth/login";
                 }else{

@@ -50,6 +50,17 @@
                 margin_bottom: 50,
             });
 			blog.bindDump('.locate');
+
+			$(window).selectbox({
+				"bottom_height":10,
+				"page":1,
+				"pageCount":{{$pageCount}},
+				"callback":function(e){
+					$.phpajax("/articlePage/{{$key}}/{{$order}}/" + e.page,"get","",true,"json",function(data){
+						$('#gallery-wrapper').append(data);
+					})
+				}
+			});
         });
 	</script>
 @endsection

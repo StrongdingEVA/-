@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'],function(){
 });
 
 Route::get('/blog/{key?}/{order?}/{search?}', 'ArticleController@index');
+Route::get('/articlePage/{key}/{order}/{page}', 'ArticleController@articlePage');
 Route::get('', 'ArticleController@index');
 
 Route::get('article_detail/{id}/{cid?}/{aid?}/{type?}', 'ArticleController@detail');//文章详情

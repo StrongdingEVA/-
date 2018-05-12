@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>懒人日志</title>
+    <link rel="shortcut icon" href="xqzxhh.ico" type="image/x-icon" />
     <link href="/Home/css/bootstrap.css" rel='stylesheet' type='text/css' />
     <script type="text/javascript" src="/Home/js/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="/Home/js/blog.js"></script>
@@ -107,34 +108,13 @@
                             <li @if($active == 'picwall')class="active"@endif><a href="/picturewall/old">照片墙</a></li>
                             <div class="clearfix"></div>
                         </ul>
-                        <div class="search">
-                            <!-- start search-->
-                            <div class="search-box">
-                                <div id="sb-search" class="sb-search">
-                                    <form>
-                                        <input class="sb-search-input" placeholder="搜索用户/文章" value="{{$search}}" type="search" name="search" id="search">
-                                        <input class="sb-search-submit" type="button" onclick="javascript:void(window.location.href='/blog/{{$key}}}/'+$('#search').val())" value="">
-                                        <span class="sb-icon-search"> </span>
-                                    </form>
-                                </div>
-                            </div>
-                            <!-- search-scripts -->
-                            <script type="text/javascript" src="/Home/js/classie.js"></script>
-                            <script type="text/javascript" src="/Home/js/uisearch.js"></script>
-                            <script>
-                                new UISearch( document.getElementById( 'sb-search' ) );
-                            </script>
-                            <!-- //search-scripts -->
-                        </div>
                         <div class="clearfix"></div>
                     </div>
                 </div>
-                <!--/.navbar-collapse-->
-                <!--/.navbar-->
+
+            </nav>
         </div>
-        </nav>
     </div>
-</div>
 
 <!-- header-section-ends-here -->
 <div class="wrap">

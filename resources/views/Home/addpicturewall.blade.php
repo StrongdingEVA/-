@@ -89,8 +89,8 @@
                         <textarea name="disc" id="disc" placeholder="为你的图片陪上点文字吧~" class="form-control onblur" cols="30" rows="4" required>@if(old("disc")) {{old("disc")}}} @endif</textarea>
                     </div>
 
-                    <div class="grid_3 grid_5" id="select-file-div" style="text-align: right;margin-right: 20px">
-                        <input type="submit" class="btn btn-primary btn-sm" value="发布">
+                    <div class="input-group mar-top" style="width: 100%;overflow: auto" id="select-file-div">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">发布</button>
                     </div>
                 </div>
                 <!--short-codes-evds-->

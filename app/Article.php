@@ -113,7 +113,7 @@ class Article extends Model
         }
         $res = $res->get()->toArray();
         if(!$res){
-            return array();
+            return array(array('data' => array()),0);
         }
         $item = array_slice($res, ($page - 1) * $pageSize, $pageSize); //注释1
         $temp = array();
@@ -136,7 +136,7 @@ class Article extends Model
         ]);
         $paginatorAns->setCurrPage($page);
         $result = $paginatorAns->toArray()['data'];
-        return $result;
+        return array($result,$total);
     }
 
     /**

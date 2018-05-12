@@ -27,6 +27,7 @@ class ArticleController extends BaseController
     {
         //$this->dispatch((new CollectionBook(17))->delay(2));
         //查询分类
+        $pageSize = 12;
         $fields = array('*');
         $where = array('is_show' => 1);
         $whereIn = array();
@@ -51,6 +52,49 @@ class ArticleController extends BaseController
         $search && $where['article_title'] = trim($search);
         switch ($order){
             case 'hot':
+                $orderArr = array('comments','desc');
+                break;
+            case 'new':
+                $orderArr = array('created_at','desc');
+                break;
+            case 'old':
+                $orderArr = array('created_at','asc');
+                break;
+            default:
+                $orderArr = array('comments','desc');
+                break;
+        }
+
+        list($data,$total) = Article::getList($fields,$where,$whereIn,$orderArr,1,$pageSize);
+        $articleList = $data ? $data['data'] : array();
+        $pageCount = ceil($total / $pageSize);
+        return view('Home.index',compact('articleList','key','search','active','pageCount','order'));
+    }
+
+    public function articlePage(Request $request,$key = 'world',$order = 'hot',$page = '1'){
+        $pageSize = 12;
+        $fields = array('*');
+        $where = array('is_show' => 1);
+        $whereIn = array();
+        $articleList = array();
+        if($key == 'friend'){
+            if(!$this->uId){
+                \Helpers::echoJsonAjax(-1,'请先登录');
+            }
+            $extInfo = Userextend::getUserExtendById($this->uId);
+            $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
+            if(!$foucs){
+                return view('Home.index',compact('articleList','key','search'));
+            }
+            $whereIn = array('user_id',$foucs);
+        }else if($key == 'own'){
+            if(!$this->uId){
+                \Helpers::echoJsonAjax(-1,'请先登录');
+            }
+            $whereIn = array('user_id',[$this->uId]);
+        }
+        switch ($order){
+            case 'hot':
                 $order = array('comments','desc');
                 break;
             case 'new':
@@ -64,9 +108,9 @@ class ArticleController extends BaseController
                 break;
         }
 
-        $data = Article::getList($fields,$where,$whereIn,$order,1,16);
+        list($data,$total) = Article::getList($fields,$where,$whereIn,$order,1,$pageSize);
         $articleList = $data ? $data['data'] : array();
-        return view('Home.index',compact('articleList','key','search','active'));
+        return view('Home.articlePage',compact('articleList'));
     }
 
     /**
