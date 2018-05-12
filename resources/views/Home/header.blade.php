@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>懒人日志</title>
-    <link rel="shortcut icon" href="xqzxhh.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/xqzxhh.ico" type="image/x-icon" />
     <link href="/Home/css/bootstrap.css" rel='stylesheet' type='text/css' />
     <script type="text/javascript" src="/Home/js/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="/Home/js/blog.js"></script>
