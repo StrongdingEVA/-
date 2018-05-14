@@ -6,6 +6,7 @@ use App\Answer;
 use App\Article;
 use App\Comment;
 use App\User;
+use smtpmail\SendMail;
 use App\Userextend;
 use App\UserMessage;
 use Illuminate\Http\Request;

@@ -27,13 +27,13 @@
             "App\\": "app/"
         },
         "files":[
-            "app/helper/SwooleServer.php",
-            "app/helper/SwooleClient.php"
         ]
     },
     "autoload-dev": {
         "classmap": [
-            "tests/TestCase.php"
+            "tests/TestCase.php",
+            "vendor/smtpmail/SendMail.class.php",
+            "vendor/smtpmail/Smtp.class.php"
         ]
     },
     "scripts": {

@@ -11,6 +11,8 @@ use App\Http\Controllers\SendrecordController;
 use App\Http\Controllers\UserextendController;
 use App\Http\Controllers\UserMessageController;
 use App\User;
+use Illuminate\Support\Facades\Validator;
+use smtpmail\SendMail;
 use App\Http\Requests;
 use App\Userextend;
 use Illuminate\Support\Facades\Auth;
@@ -120,11 +122,8 @@ class AuthController extends Controller
         if(empty($email) || empty($number)){
             return false;
         }
-        $this->email = $email;
-        $content = "你正在注册Mr.Tin Blog，此次验证码为{$number}";
-        return (Mail::raw($content,function ($message) {
-            $message ->to($this->email)->subject('Mr.Tin Blog 注册');
-        }));
+        $content = "你正在注册懒人日志，此次验证码为{$number}";
+        return SendMail::send($email,'懒人日志注册',$content);
     }
 
     /**
@@ -134,6 +133,7 @@ class AuthController extends Controller
     public function getCheckNumber(Request $request){
         $arrOut = array("status" => -1,"message" => "注册失败",);
         $number = rand(1954,9999);
+
         //发送验证码
         if($this->sendEmail($_POST["email"],$number)){
             $recordId = SendrecordController::insertRecord($_POST["email"],$number);

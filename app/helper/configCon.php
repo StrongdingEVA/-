@@ -1,6 +1,13 @@
 <?php
 $dir = substr($_SERVER["SCRIPT_FILENAME"],0,strrpos($_SERVER["SCRIPT_FILENAME"],"index.php"))."upload";
 
+//邮箱信息配置
+define('SMTP_SERVER','smtp.163.com');
+define('SMTP_PORT',25);
+define('SMTP_USER_MAIL','18016550990@163.com');
+define('SMTP_USER','18016550990@163.com');
+define('SMTP_PASS','EVANGELION2018');
+
 define("UPLOADDIR",$dir);
 
 define("COMMENT_POINT",5); //评论增加积分
