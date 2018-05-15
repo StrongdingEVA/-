@@ -11,7 +11,7 @@ ws.onopen = function()
         var data = {
             act:'send_t_u',
             data:{
-                f:'s_m_t_u',
+                f:'c_r',
                 recepter:1,
                 msg:'自己发送给自己的信息'
             }

@@ -9,6 +9,7 @@
 <script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript" charset="utf-8" src="/Home/js/myjs.js"></script>
 <script type="text/javascript" charset="utf-8" src="/Home/js/page.js"></script>
+<script type="text/javascript" charset="utf-8" src="/Home/js/bsocket.js"></script>
 <script src="/Home/js/pinterest_grid.js"></script>
 	<div class="main-body">
 		@if(old("error"))
