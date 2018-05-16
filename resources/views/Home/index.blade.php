@@ -6,9 +6,9 @@
 	<div class="">
 		<div class="fixed-btn">
 			<a class="go-top" href="/publish">发布</a>
-			<a class="qrcode" href="/blog/{{$key}}/hot/{{$search}}">最热</a>
-			<a class="go-top" href="/blog/{{$key}}/new/{{$search}}">最新</a>
-			<a class="qrcode" href="/blog/{{$key}}/old/{{$search}}">最早</a>
+			<a class="qrcode @if($order == 'hot') active @endif" href="/blog/{{$key}}/hot/{{$search}}">最热</a>
+			<a class="go-top @if($order == 'new') active @endif" href="/blog/{{$key}}/new/{{$search}}">最新</a>
+			<a class="qrcode @if($order == 'old') active @endif" href="/blog/{{$key}}/old/{{$search}}">最早</a>
 		</div>
 	</div>
 	<section id="gallery-wrapper">

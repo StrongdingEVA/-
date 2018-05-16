@@ -32,9 +32,10 @@
 <!['endif']-->
     <div class="">
         <div class="fixed-btn">
-            <a class="go-top" href="/picturewall/new">最新</a>
-            <a class="qrcode" href="/picturewall/hot">最热</a>
-            <a class="qrcode" href="/picturewall/old">最早</a>
+            <a class="go-top" href="/createpicwall">发布</a>
+            <a class="go-top @if($type == 'new') active @endif" href="/picturewall/new">最新</a>
+            <a class="qrcode @if($type == 'hot') active @endif" href="/picturewall/hot">最热</a>
+            <a class="qrcode @if($type == 'old') active @endif" href="/picturewall/old">最早</a>
         </div>
     </div>
     <section id="gallery-wrapper">
@@ -55,17 +56,6 @@
                 <p>发布时间：{{$item['created_at']}}</p>
             </article>
         @endforeach
-    </section>
-
-    <section style="width: 73px;position: fixed;right: 45px;top:220px">
-        <article class="add-article">
-            <a href="/createpicwall">
-                <img src="/Home/images/plus23.png" class="thumb">
-                <p style="text-align: center">
-                    <span>发表图片</span>
-                </p>
-            </a>
-        </article>
     </section>
 
 <script src="/Home/js/pinterest_grid.js"></script>

@@ -23,7 +23,6 @@ class PictureWallController extends BaseController
      */
     public function index(Request $request,$type)
     {
-        //
         $actionLi = 5;
         $pageSize = 16;
         $hotPicItem = Hotpic::getHotPic(1,$type,$pageSize);
@@ -90,11 +89,23 @@ class PictureWallController extends BaseController
             }
 
             $imgDst = str_replace("source","thumb",$result["result"]);
-            if(\Helpers::resizejpg($result["result"],"./".$imgDst,0,200)){
-                $exif["src"] = "/".$imgDst;
-                \Helpers::echoJsonAjax(1,$request->session()->all(),$exif,1);
+            $thumbDir = substr($imgDst,0,strrpos($imgDst,'/'));
+            if(!is_dir($thumbDir)){
+                @mkdir($thumbDir);
             }
-            \Helpers::echoJsonAjax(-1,"压缩失败");
+            $Image = new \img\Image();
+            $Image->open($result["result"]);
+            $Image->thumb(900, 900)->save($result["result"]);
+            $Image->thumb(300, 300)->save($imgDst);
+            $exif["src"] = "/".$result["result"];
+            \Helpers::echoJsonAjax(1,$request->session()->all(),$exif,1);
+
+//            $imgDst = str_replace("source","thumb",$result["result"]);
+//            if(\Helpers::resizejpg($result["result"],"./".$imgDst,0,200)){
+//                $exif["src"] = "/".$imgDst;
+//                \Helpers::echoJsonAjax(1,$request->session()->all(),$exif,1);
+//            }
+//            \Helpers::echoJsonAjax(-1,"压缩失败");
         }else{
             $this->arrOut["status"] = -1;
             $this->arrOut["message"] = $result["message"];

@@ -26,6 +26,10 @@ img.thumb {width: 100%;max-width: 100%;height: auto;}
     background-color:#fff;
     text-decoration: none;
 }
+.fixed-btn .active{
+    background-color:#337ab7;
+    color:#fff;
+}
 .fixed-btn a:hover{
     background-color:#337ab7;
     color:#fff;
