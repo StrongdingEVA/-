@@ -33,7 +33,11 @@
         "classmap": [
             "tests/TestCase.php",
             "vendor/smtpmail/SendMail.class.php",
-            "vendor/smtpmail/Smtp.class.php"
+            "vendor/smtpmail/Smtp.class.php",
+            "vendor/img/Gd.class.php",
+            "vendor/img/GIF.class.php",
+            "vendor/img/Image.class.php",
+            "vendor/img/Imagick.class.php"
         ]
     },
     "scripts": {

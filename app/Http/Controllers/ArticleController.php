@@ -34,6 +34,7 @@ class ArticleController extends BaseController
         $whereIn = array();
         $articleList = array();
         $pageCount = 1;
+        $active = $key;
         if($key == 'friend'){
             if(!$this->uId){
                 return redirect('auth/login');exit();
@@ -41,16 +42,17 @@ class ArticleController extends BaseController
             $extInfo = Userextend::getUserExtendById($this->uId);
             $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
             if(!$foucs){
-                return view('Home.index',compact('articleList','key','search','pageCount','order'));
+                return view('Home.index',compact('articleList','key','search','pageCount','order','active'));
             }
             $whereIn = array('user_id',$foucs);
         }else if($key == 'own'){
+            unset($where['is_show']);
             if(!$this->uId){
                 return redirect('auth/login');exit();
             }
             $whereIn = array('user_id',[$this->uId]);
         }
-        $active = $key;
+
         $search && $where['article_title'] = trim($search);
         switch ($order){
             case 'hot':
@@ -236,7 +238,7 @@ class ArticleController extends BaseController
         $article->article_title = htmlspecialchars($articleInfo["article_title"]);
         $article->article_disc = $articleInfo["article_disc"];
         $article->article_content = htmlspecialchars($articleInfo["article_content"]);
-        $article->article_thumb = substr($articleInfo["article_thumb"],0,strpos($articleInfo["article_thumb"],','));
+        $article->article_thumb = $articleInfo["article_thumb"];
         $article->article_source_pic = str_replace("thumb","source",$articleInfo["article_thumb"]);
         $article->user_id = $articleInfo["user_id"];
         $article->is_recommend = 0;
@@ -264,10 +266,18 @@ class ArticleController extends BaseController
      * @param Request $request
      */
     public function uploadimg(Request $request){
-        $result = \Helpers::uploadimg("","upload/articleimg",2);//echo json_encode($result);die;
+        $result = \Helpers::uploadimg("","upload/articleimg",2);;
         if($result["status"]==0){
             $imgDst = str_replace("source","thumb",$result["result"]);
-            \Helpers::resizejpg($result["result"],"./".$imgDst,0,500);
+            $thumbDir = substr($imgDst,0,strrpos($imgDst,'/'));
+            if(!is_dir($thumbDir)){
+                @mkdir($thumbDir);
+            }
+            $Image = new \img\Image();
+            $Image->open($result["result"]);
+            $Image->thumb(900, 900)->save($result["result"]);
+            $Image->thumb(300, 300)->save($imgDst);
+            //\Helpers::resizejpg($result["result"],"./".$imgDst,0,500);
 
             $this->arrOut["status"] = 1;
             $this->arrOut["message"] = "上传成功";

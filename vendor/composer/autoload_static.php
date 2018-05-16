@@ -855,6 +855,12 @@ class ComposerStaticInite076afe45cb086ab2da8c82077e278c9
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'UserMessages' => __DIR__ . '/../..' . '/database/migrations/2016_12_27_140925_user_messages.php',
         'Userextends' => __DIR__ . '/../..' . '/database/migrations/2016_12_16_064506_userextends.php',
+        'img\\GIF' => __DIR__ . '/..' . '/img/GIF.class.php',
+        'img\\GIFDecoder' => __DIR__ . '/..' . '/img/GIF.class.php',
+        'img\\GIFEncoder' => __DIR__ . '/..' . '/img/GIF.class.php',
+        'img\\Gd' => __DIR__ . '/..' . '/img/Gd.class.php',
+        'img\\Image' => __DIR__ . '/..' . '/img/Image.class.php',
+        'img\\Imagick' => __DIR__ . '/..' . '/img/Imagick.class.php',
         'smtpmail\\SendMail' => __DIR__ . '/..' . '/smtpmail/SendMail.class.php',
         'smtpmail\\Smtp' => __DIR__ . '/..' . '/smtpmail/Smtp.class.php',
     );

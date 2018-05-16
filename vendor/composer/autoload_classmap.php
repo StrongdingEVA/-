@@ -532,6 +532,12 @@ return array(
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'UserMessages' => $baseDir . '/database/migrations/2016_12_27_140925_user_messages.php',
     'Userextends' => $baseDir . '/database/migrations/2016_12_16_064506_userextends.php',
+    'img\\GIF' => $vendorDir . '/img/GIF.class.php',
+    'img\\GIFDecoder' => $vendorDir . '/img/GIF.class.php',
+    'img\\GIFEncoder' => $vendorDir . '/img/GIF.class.php',
+    'img\\Gd' => $vendorDir . '/img/Gd.class.php',
+    'img\\Image' => $vendorDir . '/img/Image.class.php',
+    'img\\Imagick' => $vendorDir . '/img/Imagick.class.php',
     'smtpmail\\SendMail' => $vendorDir . '/smtpmail/SendMail.class.php',
     'smtpmail\\Smtp' => $vendorDir . '/smtpmail/Smtp.class.php',
 );
