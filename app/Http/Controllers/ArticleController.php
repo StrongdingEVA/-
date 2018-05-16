@@ -41,7 +41,7 @@ class ArticleController extends BaseController
             $extInfo = Userextend::getUserExtendById($this->uId);
             $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
             if(!$foucs){
-                return view('Home.index',compact('articleList','key','search','pageCount'));
+                return view('Home.index',compact('articleList','key','search','pageCount','order'));
             }
             $whereIn = array('user_id',$foucs);
         }else if($key == 'own'){
