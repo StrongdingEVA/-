@@ -68,7 +68,7 @@ class ArticleController extends BaseController
 
         list($data,$total) = Article::getList($fields,$where,$whereIn,$orderArr,1,$pageSize);
         $articleList = $data ? $data['data'] : array();
-        $pageCount = ceil($total / $pageSize);
+        $pageCount = $total ? ceil($total / $pageSize) : 0;
         return view('Home.index',compact('articleList','key','search','active','pageCount','order'));
     }
 
