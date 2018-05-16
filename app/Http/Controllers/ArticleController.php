@@ -33,6 +33,7 @@ class ArticleController extends BaseController
         $where = array('is_show' => 1);
         $whereIn = array();
         $articleList = array();
+        $pageCount = 1;
         if($key == 'friend'){
             if(!$this->uId){
                 return redirect('auth/login');exit();
@@ -40,7 +41,7 @@ class ArticleController extends BaseController
             $extInfo = Userextend::getUserExtendById($this->uId);
             $foucs = $extInfo['user_foucs'] ? json_decode($extInfo['user_foucs'],1) : array();
             if(!$foucs){
-                return view('Home.index',compact('articleList','key','search'));
+                return view('Home.index',compact('articleList','key','search','pageCount'));
             }
             $whereIn = array('user_id',$foucs);
         }else if($key == 'own'){
