@@ -245,11 +245,11 @@ class Smtp
 
 //        $this->sock = @fsockopen($this->relay_host, $this->smtp_port, $errno, $errstr, $this->time_out);
 //        $this->sock = @stream_socket_client($this->relay_host.":".$this->smtp_port, $errno,  $errstr,  $this->time_out);
-        $this->sock = @pfsockopen($this->relay_host, $this->smtp_port, $errno, $errstr, $this->time_out);
+        $this->sock = @fsockopen($this->relay_host, $this->smtp_port, $errno, $errstr, $this->time_out);
 
         if (!($this->sock && $this->smtp_ok())) {
 
-            $this->log_write("Error: Cannot connenct to relay 111 host ".$this->relay_host."\n");
+            $this->log_write("Error: Cannot connenct to relay host ".$this->relay_host."\n");
 
             $this->log_write("Error: ".$errstr." (".$errno.")\n");
 
@@ -281,9 +281,8 @@ class Smtp
         foreach ($MXHOSTS as $host) {
 
             $this->log_write("Trying to ".$host.":".$this->smtp_port."\n");
-
-            $this->sock = @stream_socket_client($host.":".$this->smtp_port, $errno,  $errstr,  $this->time_out);
-//            $this->sock = @fsockopen($host, $this->smtp_port, $errno, $errstr, $this->time_out);
+            
+            $this->sock = @fsockopen($host, $this->smtp_port, $errno, $errstr, $this->time_out);
 
             if (!($this->sock && $this->smtp_ok())) {
 
