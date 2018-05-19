@@ -402,9 +402,9 @@ class ArticleController extends BaseController
     }
 
     public function test(Request $request){
-//        $content = "你正在注册懒人日志，此次验证码为";
-//        $result = SendMail::send('762330439@qq.com','懒人日志注册',$content);
-//        var_dump($result);
+        $content = "你正在注册懒人日志，此次验证码为";
+        $result = SendMail::send('762330439@qq.com','懒人日志注册',$content);
+        var_dump($result);
         phpinfo();
     }
 
